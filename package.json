@@ -1,0 +1,21 @@
+{
+  "name": "app-name",
+  "version": "1.xx.xx",
+  "description": "desc",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Name",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.4.1",
+    "eslint-plugin-react": "^7.28.0",
+    "prettier": "^1.19.1"
+  }
+}
