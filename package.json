@@ -3,7 +3,9 @@
   "version": "1.xx.xx",
   "description": "desc",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "watch:sass": "sass --watch public/sass/main.scss:public/css/styles.css"
+  },
   "author": "Name",
   "license": "ISC",
   "dependencies": {},
