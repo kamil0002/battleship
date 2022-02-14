@@ -1,13 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/styles.css">
-  <title>Document</title>
+  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script src="./assets/scripts/index.js" defer></script>
+  <title>Battleship</title>
 </head>
+
 <body>
-  
+  <audio muted autoplay id="bg-music" src="./assets/audio/bgMusic.mp3" type="audio/mp3"></audio>
+  <div id="bg"></div>
+  <h1 class="game-title">Battleship</h1>
+  <div class="form-wrapper">
+    <form action="#" class="form">
+      <h2 class="form__header">
+        Battleship
+      </h2>
+      <div class="form__username">
+        <label>Your name</label>
+        <input />
+      </div>
+      <div class="form__option-btns">
+        <input id="vs-pc" type="radio" name="game-mode">
+        <label for="vs-pc">Play against computer</label>
+
+        <input id="vs-player" type="radio" name="game-mode">
+        <label for="vs-player">Play against computer</label>
+      </div>
+
+      <button type="submit" class="form__button">Start</button>
+    </form>
+  </div>
+
+  <div class="app-actions">
+    <a class="app-actions__bg">
+      <img src="assets/images/BackgroundVisible.svg" alt="Background Active icon">
+    </a>
+    <a data-music="off" class="app-actions__music">
+      <img src="assets/images/MusicPaused.svg" alt="Music Player Icon">
+    </a>
+  </div>
 </body>
+
 </html>
