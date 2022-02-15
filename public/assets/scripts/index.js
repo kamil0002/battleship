@@ -1,3 +1,5 @@
+//* Classes
+
 class AudioPlayer {
   constructor() {
     this._music = new Audio('./../assets/audio/bgMusic.mp3');
@@ -18,36 +20,34 @@ class AudioPlayer {
 }
 
 class AudioController {
-  _AudioPlayer = new AudioPlayer();
+  #musicController;
+  #AudioPlayer = new AudioPlayer();
 
   constructor() {
-    this._musicController = document.querySelector('.app-actions__music');
+    this.#musicController = document.querySelector('.app-actions__music');
   }
 
   control() {
-    this._musicController.addEventListener(
+    this.#musicController.addEventListener(
       'click',
-      this.musicController.bind(this)
+      this.#controlMusicHandler.bind(this)
     );
   }
 
-  musicController() {
-    if (!this._AudioPlayer._isMusicPlaying) {
-      this._AudioPlayer.play();
-      this._musicController.children[0].src = 'assets/images/MusicResumed.svg';
+  #controlMusicHandler() {
+    if (!this.#AudioPlayer._isMusicPlaying) {
+      this.#AudioPlayer.play();
+      this.#musicController.children[0].src = 'assets/images/MusicResumed.svg';
       return;
     }
-    if (this._AudioPlayer._isMusicPlaying) {
-      this._AudioPlayer.pause();
-      this._musicController.children[0].src = 'assets/images/MusicPaused.svg';
+    if (this.#AudioPlayer._isMusicPlaying) {
+      this.#AudioPlayer.pause();
+      this.#musicController.children[0].src = 'assets/images/MusicPaused.svg';
     }
   }
 }
 
-const gameOptions = {};
-
-const runGameBtn = document.querySelector('.form__button');
-const playerName = document.querySelector('.form__username input');
+//* Helpers
 
 const handleModalDisplay = () => {
   const modal = document.querySelector('.modal');
@@ -56,6 +56,22 @@ const handleModalDisplay = () => {
     .querySelector('.modal__close')
     .addEventListener('click', () => modal.classList.add('modal--hidden'));
 };
+
+//* Game functionality
+
+const MusicController = new AudioController();
+
+MusicController.control();
+
+const gameOptions = {
+  boardSize: 340,
+  cellSize: 34,
+};
+
+const runGameBtn = document.querySelector('.form__button');
+const playerName = document.querySelector('.form__username input');
+const board = document.querySelector('.board');
+const boardRows = board.querySelectorAll('.board__row');
 
 const runGameMode = function () {
   if (runGameBtn)
@@ -69,10 +85,18 @@ const runGameMode = function () {
     });
 };
 
-const MusicController = new AudioController();
-
-MusicController.control();
-
 runGameMode();
 
 gameOptions.mode = mode;
+
+const createBoardCells = () => {
+  boardRows.forEach((row) => {
+    for (let i = 0; i < gameOptions.boardSize / gameOptions.cellSize; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'board__cell';
+      row.insertAdjacentElement('afterbegin', cell);
+    }
+  });
+};
+
+createBoardCells();
