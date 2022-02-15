@@ -1,17 +1,4 @@
-class AudioPlayer {
-  constructor() {
-    this._music = new Audio('./../assets/audio/bgMusic.mp3');
-    this._music.volume = 0.07;
-  }
-
-  play() {
-    this._music.play();
-  }
-
-  pause() {
-    this._music.pause();
-  }
-}
+import AudioPlayer from './components/AudioPlayer';
 
 class Application {
   _AudioPlayer = new AudioPlayer();
@@ -49,6 +36,5 @@ class Initiallizer {
     App.run();
   }
 }
-
 
 Initiallizer.init();

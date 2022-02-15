@@ -4,7 +4,10 @@
   "description": "desc",
   "main": "index.js",
   "scripts": {
-    "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css"
+    "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "build:prod": "webpack --config webpack.config.prod.js"
   },
   "author": "Name",
   "license": "ISC",
@@ -12,7 +15,12 @@
     "live-server": "^1.2.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.2",
+    "@babel/preset-env": "^7.16.11",
     "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "core-js": "^3.21.0",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
@@ -21,6 +29,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "regenerator-runtime": "^0.13.9",
+    "style-loader": "^3.3.1",
+    "webpack": "^4.40.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.1"
   }
 }
