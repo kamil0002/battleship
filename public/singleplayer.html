@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <title>Battleship - singleplayer</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>
+    const mode = 'Singleplayer';
+  </script>
+  <script src="./assets/scripts/index.js" defer></script>
+</head>
+
+<body>
+  <audio muted autoplay id="bg-music" src="./assets/audio/bgMusic.mp3" type="audio/mp3"></audio>
+  <div id="bg"></div>
+  <div class="app-actions">
+    <a class="app-actions__bg">
+      <img src="assets/images/BackgroundVisible.svg" alt="Background Active icon">
+    </a>
+    <a class="app-actions__music">
+      <img src="assets/images/MusicPaused.svg" alt="Music Player Icon">
+    </a>
+  </div>
+</body>
+
+</html>

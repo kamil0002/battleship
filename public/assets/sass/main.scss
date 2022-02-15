@@ -7,6 +7,7 @@
 
 $color-light: #f3f3f3;
 $color-dark: #3c3f43;
+$color-warning: #b13957;
 
 *,
 *::after,
@@ -23,6 +24,7 @@ html {
 body {
   box-sizing: border-box;
   font-size: 1.6rem;
+  font-family: 'Poppins';
 }
 
 #bg {
@@ -129,6 +131,8 @@ body {
 
   &__button {
     font-family: 'Vermin Vibes';
+    text-decoration: none;
+    color: $color-dark;
     font-size: 2rem;
     background: #c4c4c4;
     border-radius: 10px;
@@ -166,6 +170,38 @@ body {
     background-color: $color-light;
     border-radius: 3px;
     cursor: pointer;
+  }
+}
+
+.modal {
+  padding: 1.5rem 3rem;
+  position: fixed;
+  background-color: $color-light;
+  box-shadow: 2px 1px 3px rgb(0 0 0 /30%);
+  transform: translate(-50%, 50%);
+  left: 50%;
+  top: 10%;
+  opacity: 1;
+
+  transition: all 250ms ease-out;
+  z-index: 10;
+
+  &__description {
+    padding: 2rem;
+    color: $color-warning;
+  }
+
+  &__close {
+    position: absolute;
+    top: 7%;
+    right: 5%;
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+
+  &--hidden {
+    transform: translate(-50%, 10%);
+    opacity: 0;
   }
 }
 
