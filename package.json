@@ -2,16 +2,18 @@
   "name": "app-name",
   "version": "1.xx.xx",
   "description": "desc",
-  "main": "index.js",
   "scripts": {
-    "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css"
+    "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
+    "start": "parcel public/index.html public/singleplayer.html --dist-dir public/dist"
   },
   "author": "Name",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "live-server": "^1.2.1"
   },
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.3.2",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
@@ -20,6 +22,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
+    "parcel": "^2.3.2",
     "prettier": "^2.5.1"
   }
 }

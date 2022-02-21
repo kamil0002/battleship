@@ -1,61 +1,9 @@
-//* Classes
-
-class AudioPlayer {
-  constructor() {
-    this._music = new Audio('./../assets/audio/bgMusic.mp3');
-    this._music.loop = true;
-    this._music.volume = 0.035;
-    this._isMusicPlaying = false;
-  }
-
-  play() {
-    this._music.play();
-    this._isMusicPlaying = true;
-  }
-
-  pause() {
-    this._music.pause();
-    this._isMusicPlaying = false;
-  }
-}
-
-class AudioController {
-  #musicController;
-  #AudioPlayer = new AudioPlayer();
-
-  constructor() {
-    this.#musicController = document.querySelector('.app-actions__music');
-  }
-
-  control() {
-    this.#musicController.addEventListener(
-      'click',
-      this.#controlMusicHandler.bind(this)
-    );
-  }
-
-  #controlMusicHandler() {
-    if (!this.#AudioPlayer._isMusicPlaying) {
-      this.#AudioPlayer.play();
-      this.#musicController.children[0].src = 'assets/images/MusicResumed.svg';
-      return;
-    }
-    if (this.#AudioPlayer._isMusicPlaying) {
-      this.#AudioPlayer.pause();
-      this.#musicController.children[0].src = 'assets/images/MusicPaused.svg';
-    }
-  }
-}
+//* Imports
+import '@babel/polyfill';
+import AudioController from './AudioController';
+import { showModal } from './utils';
 
 //* Helpers
-
-const handleModalDisplay = () => {
-  const modal = document.querySelector('.modal');
-  modal.classList.toggle('modal--hidden');
-  modal
-    .querySelector('.modal__close')
-    .addEventListener('click', () => modal.classList.add('modal--hidden'));
-};
 
 //* Game functionality
 
@@ -70,33 +18,84 @@ const gameOptions = {
 
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
-const board = document.querySelector('.board');
-const boardRows = board.querySelectorAll('.board__row');
 
 const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
       const playerNameVal = playerName.value;
-      if (playerNameVal.trim() === '') {
-        handleModalDisplay();
+      if (playerNameVal.trim() === '' || !mode) {
+        showModal();
         return;
       }
-      location.href = `${mode}.html`;
+      location.assign(`${location.protocol}//${location.host}/${mode}.html`);
     });
 };
 
 runGameMode();
 
-gameOptions.mode = mode;
+const enableDragging = function (board) {
+  const tempDot = document.querySelector('.dot');
+  const boardSquares = document.querySelectorAll('.board__cell');
+  const draggableShip = document.querySelector('.ships__carrier');
 
-const createBoardCells = () => {
-  boardRows.forEach((row) => {
-    for (let i = 0; i < gameOptions.boardSize / gameOptions.cellSize; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'board__cell';
-      row.insertAdjacentElement('afterbegin', cell);
+  let draggedShip;
+  let startPosX;
+  let startPosY;
+
+  const enableDraggingHandler = function (e) {
+    e.dataTransfer.setData('text/plain', this.dataset.id);
+    e.dataTransfer.effectAllowed = 'move';
+    draggedShip = e.target;
+  };
+
+  const dragOver = function (e) {
+    if (e.dataTransfer.types[0] === 'text/plain') {
+      e.preventDefault();
     }
-  });
+  };
+  function dragEnter(e) {
+    e.preventDefault();
+  }
+
+  const dropEl = function (e) {
+    console.log(draggedShip.getBoundingClientRect());
+    const shipId = e.dataTransfer.getData('text/plain');
+    const draggedElement = document.querySelector(`[data-id='${shipId}']`);
+    console.log(event);
+    const pos = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+    tempDot.style.top = `${pos.y}px`;
+    tempDot.style.left = `${pos.x}px`;
+  };
+
+  draggableShip.addEventListener('dragstart', enableDraggingHandler);
+  boardSquares.forEach((square) => square.addEventListener('drop', dropEl));
+  boardSquares.forEach((square) =>
+    square.addEventListener('dragover', dragOver)
+  );
+  boardSquares.forEach((square) =>
+    square.addEventListener('dragenter', dragEnter)
+  );
 };
 
-createBoardCells();
+if (mode) {
+  const board = document.querySelector('.board');
+  const boardRows = board.querySelectorAll('.board__row');
+  gameOptions.mode = mode;
+
+  const createBoardCells = () => {
+    boardRows.forEach((row, index) => {
+      for (let i = 0; i < gameOptions.boardSize / gameOptions.cellSize; i++) {
+        const cell = document.createElement('div');
+        cell.dataset.id = parseInt(index + i);
+        cell.className = `board__cell`;
+        row.insertAdjacentElement('afterbegin', cell);
+      }
+    });
+  };
+  createBoardCells();
+
+  enableDragging(board);
+}

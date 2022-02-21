@@ -11,13 +11,14 @@
   <script>
     const mode = 'Singleplayer';
   </script>
-  <script src="./assets/scripts/index.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="./assets/scripts/index.js" defer type="module"></script>
 </head>
 
 <body>
   <audio muted autoplay id="bg-music" src="./assets/audio/bgMusic.mp3" type="audio/mp3"></audio>
   <div id="bg"></div>
-
+  <div class="dot"></div>
   <div class="board-wrapper">
     <div class="board">
       <div class="board__row"> </div>
@@ -30,6 +31,14 @@
       <div class="board__row"></div>
       <div class="board__row"></div>
       <div class="board__row"></div>
+    </div>
+
+    <div class="ships">
+      <div data-id="1" draggable="true" class="ships__carrier"></div>
+      <div id="2" draggable="true" class="ships__battleship"></div>
+      <div id="3" draggable="true" class="ships__cruiser"></div>
+      <div id="4" draggable="true" class="ships__submarine"></div>
+      <div id="5" draggable="true" class="ships__destroyer"></div>
     </div>
   </div>
   <div class="app-actions">

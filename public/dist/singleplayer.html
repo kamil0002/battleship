@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/favicon.9eae7ee2.ico" type="image/x-icon">
+  <title>Battleship - singleplayer</title>
+  <link rel="stylesheet" href="/singleplayer.f45434ee.css">
+  <script>const mode = 'Singleplayer';
+
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="/index.a2ef5d5e.js" defer=""></script>
+</head>
+
+<body>
+  <audio muted="" autoplay="" id="bg-music" src="/bgMusic.82a1e5b8.mp3" type="audio/mp3"></audio>
+  <div id="bg"></div>
+  <div class="dot"></div>
+  <div class="board-wrapper">
+    <div class="board">
+      <div class="board__row"> </div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+      <div class="board__row"></div>
+    </div>
+
+    <div class="ships">
+      <div data-id="1" draggable="true" class="ships__carrier"></div>
+      <div id="2" draggable="true" class="ships__battleship"></div>
+      <div id="3" draggable="true" class="ships__cruiser"></div>
+      <div id="4" draggable="true" class="ships__submarine"></div>
+      <div id="5" draggable="true" class="ships__destroyer"></div>
+    </div>
+  </div>
+  <div class="app-actions">
+    <a class="app-actions__bg">
+      <img src="/BackgroundVisible.58ed8152.svg" alt="Background Active icon">
+    </a>
+    <a class="app-actions__music">
+      <img src="/MusicPaused.7a3493c5.svg" alt="Music Player Icon">
+    </a>
+  </div>
+</body>
+
+</html>
