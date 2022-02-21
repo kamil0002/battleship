@@ -3,8 +3,6 @@ import '@babel/polyfill';
 import AudioController from './AudioController';
 import { showModal } from './utils';
 
-//* Helpers
-
 //* Game functionality
 
 const MusicController = new AudioController();

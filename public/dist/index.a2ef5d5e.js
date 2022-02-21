@@ -525,7 +525,6 @@ var _polyfill = require("@babel/polyfill");
 var _audioController = require("./AudioController");
 var _audioControllerDefault = parcelHelpers.interopDefault(_audioController);
 var _utils = require("./utils");
-//* Helpers
 //* Game functionality
 const MusicController = new _audioControllerDefault.default();
 MusicController.control();
