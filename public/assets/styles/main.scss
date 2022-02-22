@@ -349,13 +349,20 @@ body {
   background-color: $ship-color;
   cursor: default;
   border: none;
+  position: relative;
 
   &--horizontal {
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-bottom: $board-cell-border-width solid $board-color-secondary;
+    }
   }
   &--vertical {
     border-left: $board-cell-border-width solid $board-color-secondary;
   }
+
 }
 
 .ship-h-start {

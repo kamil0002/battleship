@@ -18,7 +18,7 @@ const gameOptions = {
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
 
-const runGameMode = function () {
+const runGameMode = function() {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
       const playerNameVal = playerName.value;
