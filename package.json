@@ -4,7 +4,7 @@
   "description": "desc",
   "scripts": {
     "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
-    "start": "parcel public/index.html public/singleplayer.html --dist-dir public/dist"
+    "start": "parcel --port 3000 public/index.html public/singleplayer.html --dist-dir public/dist"
   },
   "author": "Name",
   "license": "ISC",

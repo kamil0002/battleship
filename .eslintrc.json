@@ -14,7 +14,7 @@
     "no-restricted-modules": "off",
     "no-plusplus": "off",
     "no-restricted-globals": "off",
-    // "unexpect"
+    "class-methods-use-this": "off",
     "lines-around-comment": [
       "error",
       {

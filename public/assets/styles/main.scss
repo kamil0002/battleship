@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 @font-face {
   font-family: 'Vermin Vibes';
@@ -34,11 +34,7 @@ body {
 }
 
 #bg {
-  background: linear-gradient(
-      0deg,
-      rgba(35, 35, 35, 0.4),
-      rgba(35, 35, 35, 0.4)
-    ),
+  background: linear-gradient(0deg, rgba(35, 35, 35, 0.4), rgba(35, 35, 35, 0.4)),
     url('./../images/bg.jpg');
   background-size: cover;
   width: 100vw;
@@ -60,8 +56,7 @@ body {
 .form-wrapper {
   font-family: 'Vermin Vibes';
   background: rgb(133 133 133 / 90%);
-  box-shadow: -15px -10px 20px 3px rgba(0, 0, 0, 0.25),
-    10px 15px 20px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: -15px -10px 20px 3px rgba(0, 0, 0, 0.25), 10px 15px 20px 3px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
   width: min-content;
   padding: 3rem 12rem;
@@ -184,7 +179,7 @@ body {
   position: fixed;
   background-color: $color-light;
   box-shadow: 2px 1px 3px rgb(0 0 0 /30%);
-  transform: translate(-50%, 50%);
+  transform: translate(-50%, 0);
   left: 50%;
   top: 10%;
   opacity: 1;
@@ -207,7 +202,7 @@ body {
   }
 
   &--hidden {
-    transform: translate(-50%, 10%);
+    transform: translate(-50%, -30%);
     opacity: 0;
   }
 }
@@ -242,18 +237,21 @@ body {
   display: grid;
   grid-template-rows: repeat(10, $board-cell-size + $board-cell-border-width);
   border: 2px solid $board-color-secondary;
+  border-bottom: $board-cell-border-width solid $board-color-secondary;
 
   &__row {
     display: grid;
     grid-template-columns: repeat(10, $board-cell-size);
 
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
-    &:last-child {
-      border-bottom: $board-cell-border-width solid transparent;
-    }
+    //TODO Border fix
+    // border-bottom: $board-cell-border-width solid $board-color-secondary;
+    // &:last-child {
+    //   border-bottom: $board-cell-border-width solid transparent;
+    // }
   }
   &__cell {
     border-left: $board-cell-border-width solid $board-color-secondary;
+    border-bottom: $board-cell-border-width solid $board-color-secondary;
     cursor: pointer;
 
     //TODO IN GAME
@@ -275,8 +273,12 @@ body {
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: space-around;
-  // align-items: center;
-  // transform: rotate(90deg);
+  position: relative;
+
+  &--rotated {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 .ship {
@@ -285,6 +287,11 @@ body {
     height: $board-cell-size;
     background-color: $ship-color;
     border-radius: $ship-radius;
+
+    &--rotated {
+      width: $board-cell-size;
+      height: $board-cell-size * 5;
+    }
   }
 
   &--battleship {
@@ -292,6 +299,11 @@ body {
     height: $board-cell-size;
     background-color: $ship-color;
     border-radius: $ship-radius;
+
+    &--rotated {
+      width: $board-cell-size;
+      height: $board-cell-size * 4;
+    }
   }
 
   &--cruiser {
@@ -299,6 +311,11 @@ body {
     height: $board-cell-size;
     background-color: $ship-color;
     border-radius: $ship-radius;
+
+    &--rotated {
+      width: $board-cell-size;
+      height: $board-cell-size * 3;
+    }
   }
 
   &--submarine {
@@ -306,6 +323,11 @@ body {
     height: $board-cell-size;
     background-color: $ship-color;
     border-radius: $ship-radius;
+
+    &--rotated {
+      width: $board-cell-size;
+      height: $board-cell-size * 3;
+    }
   }
 
   &--destroyer {
@@ -313,6 +335,11 @@ body {
     height: $board-cell-size;
     background-color: $ship-color;
     border-radius: $ship-radius;
+
+    &--rotated {
+      width: $board-cell-size;
+      height: $board-cell-size * 2;
+    }
   }
 }
 
@@ -323,14 +350,32 @@ body {
   cursor: default;
   border: none;
 
-  // &:not(:first-of-type),
-  // &:not(:last-of-type) {
-  //   border: none;
-  // }
+  &--horizontal {
+    border-bottom: $board-cell-border-width solid $board-color-secondary;
+  }
+  &--vertical {
+    border-left: $board-cell-border-width solid $board-color-secondary;
+  }
 }
 
-.ship-start {
+.ship-h-start {
   border-radius: $ship-radius 0 0 $ship-radius;
+  position: relative;
+
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: $board-cell-size;
+    height: $board-cell-size;
+    border-left: $board-cell-border-width solid $board-color-secondary;
+    border-bottom: $board-cell-border-width solid $board-color-secondary;
+  }
+}
+
+.ship-v-start {
+  border-radius: $ship-radius $ship-radius 0 0;
   position: relative;
   border: none;
 
@@ -344,7 +389,7 @@ body {
   }
 }
 
-.ship-end {
+.ship-h-end {
   border-radius: 0 $ship-radius $ship-radius 0;
   position: relative;
   border: none;
@@ -355,14 +400,52 @@ body {
     inset: 0;
     width: $board-cell-size;
     height: $board-cell-size;
+    border-bottom: $board-cell-border-width solid $board-color-secondary;
   }
 }
 
-.dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background-color: red;
-  position: fixed;
-  z-index: 10000000;
+.ship-v-end {
+  border-radius: 0 0 $ship-radius $ship-radius;
+  position: relative;
+  border: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: $board-cell-size;
+    height: $board-cell-size;
+    border-bottom: $board-cell-border-width solid $board-color-secondary;
+    border-left: $board-cell-border-width solid $board-color-secondary;
+  }
+}
+
+.board-btns {
+  position: absolute;
+  bottom: 5%;
+  right: 4%;
+}
+
+.board-btn {
+  font-family: 'Poppins';
+  font-weight: 600;
+  text-align: center;
+  background-color: darken($color-light, 10%);
+  border: none;
+  color: $color-dark;
+  font-size: 1.4rem;
+  padding: 1rem 2rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: transform 150ms ease-out;
+
+  &:hover {
+    transform: translateY(-3%);
+  }
+
+  &--rotate {
+    margin-right: 3rem;
+  }
+  &--undo-move {
+  }
 }
