@@ -12,10 +12,7 @@ class AudioController {
   }
 
   control() {
-    this.#musicController.addEventListener(
-      'click',
-      this.#controlMusicHandler.bind(this)
-    );
+    this.#musicController.addEventListener('click', this.#controlMusicHandler.bind(this));
   }
 
   #controlMusicHandler() {
