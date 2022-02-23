@@ -206,12 +206,11 @@ body {
   }
 }
 
-// .game-container {
-//   display: flex;
-//   justify-content: space-around;
-//   align-items: center;
-//   padding-top: 15rem;
-// }
+.game-container {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 7rem;
+}
 ///////////////////////////////////////////////////////////////
 //* Board
 
@@ -243,10 +242,7 @@ body {
 }
 
 .board-wrapper {
-  // background-color: rgb(112 144 192 / 85%);
-  // padding: 4rem;
   width: 95%;
-  // height: 80vh;
   position: fixed;
   left: 50%;
   top: 5%;
@@ -254,7 +250,16 @@ body {
   display: flex;
   align-items: center;
   flex-direction: column;
-  // box-shadow: 1px 3px 5px 2px rgb(255 255 255 / 10%);
+
+  //! to ADD
+  // display: block;
+  // align-self: flex-start;
+
+
+  // width: min-content;
+  // position: relative;
+  // left: auto;
+  // transform: translate(0,0);
 
   &--enemy {
     visibility: hidden;
@@ -278,12 +283,8 @@ body {
 }
 
 .ships {
-  margin-top: 5rem;
   display: flex;
   position: relative;
-  // justify-content: center;
-  // height: min-content;
-  // grid-template-columns: repeat(5, 4.5vmin);
 
   &--rotated {
     flex-direction: row;
@@ -362,7 +363,6 @@ body {
 .taken {
   background-color: $ship-color;
   cursor: default;
-  // border: none;
   position: relative;
 
   &--horizontal {

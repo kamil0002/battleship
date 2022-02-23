@@ -28,7 +28,7 @@ class Board {
         const cell = document.createElement('div');
         cell.dataset.id = cellIndex;
         cell.className = `${this.playerMode ? 'board__cell' : 'board--enemy__cell'}`;
-        if(index === 9) cell.classList.add('last-row');
+        if (index === 9) cell.classList.add('last-row');
         row.insertAdjacentElement('beforeend', cell);
         boardSquares.push({
           squareIndex: cellIndex,
@@ -168,41 +168,27 @@ class Board {
     const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
     tl.to('.board-btn', {
       opacity: 0,
-      duration: 0.5,
+      duration: 0.4,
+      display: 'none',
     })
-      .to('.board-wrapper', { opacity: 0 })
       .to('.board-wrapper', {
-        position: 'static',
-        transform: 'translate(0, 0)',
-        duration: 0,
-      })
-      .to('.board-wrapper', {
-        background: 'rgb(0 0 0 / 0%)',
-        boxShadow: 'none',
-        width: 'min-content',
-        position: 'static',
-        left: 'auto',
-        top: 'auto',
-        transform: 'translate(0, 0)',
-        duration: 0,
-      })
-      .to('.board', {
         opacity: 0,
+      })
+      .to('.board-wrapper', {
+        width: 'min-content',
+        position: 'relative',
+        left: 'auto',
+        transform: 'translate(0,0)',
         duration: 0,
-        margin: 0
       })
-      .to('.board-wrapper', { opacity: 1, duration: 0 })
-      .to('.board', {
+      .to('.board-wrapper--enemy', {
+        visibility: 'visible',
         opacity: 1,
-      })
-      .to(
-        '.board-wrapper--enemy',
-        {
-          visibility: 'visible',
-          opacity: 1,
-        },
-        '-=0.5'
-      );
+        duration: 0.8,
+      }).to('.board-wrapper', {
+        opacity: 1,
+        duration: 0.8,
+      }, '-=0.8');
   }
 }
 export default Board;
