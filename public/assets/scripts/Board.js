@@ -23,11 +23,12 @@ class Board {
     const boardRows = this.boardContainer.querySelectorAll('.board__row');
     const boardSquares = [];
     let cellIndex = 1;
-    boardRows.forEach((row) => {
+    boardRows.forEach((row, index) => {
       for (let i = 0; i < this.gameOptions.boardSize / this.gameOptions.cellSize; i++) {
         const cell = document.createElement('div');
         cell.dataset.id = cellIndex;
         cell.className = `${this.playerMode ? 'board__cell' : 'board--enemy__cell'}`;
+        if(index === 9) cell.classList.add('last-row');
         row.insertAdjacentElement('beforeend', cell);
         boardSquares.push({
           squareIndex: cellIndex,

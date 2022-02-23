@@ -222,16 +222,18 @@ body {
   margin-left: 4rem;
   display: grid;
   grid-template-rows: repeat(10, $board-cell-size + $board-cell-border-width);
-  border: 2px solid $board-color-secondary;
-  border-bottom: $board-cell-border-width solid $board-color-secondary;
 
   &__row {
     display: grid;
     grid-template-columns: repeat(10, $board-cell-size);
+
+    &:last-child div{
+      border-bottom: none !important;
+    }
   }
   &__cell {
-    border-left: $board-cell-border-width solid $board-color-secondary;
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%) !important;
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%) !important;
     cursor: pointer;
 
     &:first-child {
@@ -272,6 +274,7 @@ body {
     }
   }
 }
+
 
 .ships {
   width: 45%;
@@ -359,7 +362,7 @@ body {
 .taken {
   background-color: $ship-color;
   cursor: default;
-  border: none;
+  // border: none;
   position: relative;
 
   &--horizontal {
@@ -367,26 +370,27 @@ body {
       content: '';
       position: absolute;
       inset: 0;
-      border-bottom: $board-cell-border-width solid $board-color-secondary;
+      border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
     }
   }
   &--vertical {
-    border-left: $board-cell-border-width solid $board-color-secondary;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
 .ship-h-start {
-  border-radius: $ship-radius 0 0 $ship-radius;
   position: relative;
-
+  border-radius: $ship-radius  0 0 $ship-radius;
+  
+  
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     width: $board-cell-size;
     height: $board-cell-size;
-    border-left: $board-cell-border-width solid $board-color-secondary;
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
@@ -401,29 +405,29 @@ body {
     inset: 0;
     width: $board-cell-size;
     height: $board-cell-size;
-    border-left: $board-cell-border-width solid $board-color-secondary;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
 .ship-h-end {
-  border-radius: 0 $ship-radius $ship-radius 0;
   position: relative;
-  border: none;
+  border-radius: 0 $ship-radius $ship-radius 0;
 
+  
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     width: $board-cell-size;
     height: $board-cell-size;
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
 .ship-v-end {
-  border-radius: 0 0 $ship-radius $ship-radius;
   position: relative;
   border: none;
+  border-radius: 0 0 $ship-radius $ship-radius;
 
   &::after {
     content: '';
@@ -431,8 +435,8 @@ body {
     inset: 0;
     width: $board-cell-size;
     height: $board-cell-size;
-    border-bottom: $board-cell-border-width solid $board-color-secondary;
-    border-left: $board-cell-border-width solid $board-color-secondary;
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
