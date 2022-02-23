@@ -241,6 +241,16 @@ body {
   }
 }
 
+.move-indicator {
+  margin-top: 1rem;
+  height: 45px;
+  img {
+    display: block;
+    margin: auto;
+    animation: indicateMove 250ms ease infinite alternate;
+  }
+}
+
 .board-wrapper {
   width: 95%;
   position: fixed;
@@ -248,18 +258,9 @@ body {
   top: 5%;
   transform: translate(-50%, 0);
   display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  //! to ADD
-  // display: block;
-  // align-self: flex-start;
-
-
-  // width: min-content;
-  // position: relative;
-  // left: auto;
-  // transform: translate(0,0);
 
   &--enemy {
     visibility: hidden;
@@ -506,5 +507,15 @@ body {
 
   to {
     transform: translateX(-50%) scale(1.03);
+  }
+}
+
+@keyframes indicateMove {
+  from {
+    transform: translateY(-3%)
+  }
+
+  to {
+    transform: translateY(3%);
   }
 }
