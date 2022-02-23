@@ -1,4 +1,5 @@
 import interact from 'interactjs';
+import { gsap } from 'gsap';
 import Ship from './Ship';
 import { showAlert, findShipPositionOnOnBoard } from './utils';
 
@@ -9,10 +10,12 @@ class Board {
     this.gameOptions = gameOptions;
     this.boardContainer = boardContainer;
     this.startGameBtn = document.querySelector('.board-btn--start');
+    this.playerMode = playerMode;
 
     if (playerMode) {
       document.querySelector('.board-btn--rotate').addEventListener('click', this._rotateShipsHandler.bind(this));
       document.querySelector('.board-btn--undo-move').addEventListener('click', this._undoMoveHandler.bind(this));
+      document.querySelector('.board-btn--start').addEventListener('click', this._startGame);
     }
   }
 
@@ -24,7 +27,7 @@ class Board {
       for (let i = 0; i < this.gameOptions.boardSize / this.gameOptions.cellSize; i++) {
         const cell = document.createElement('div');
         cell.dataset.id = cellIndex;
-        cell.className = 'board__cell';
+        cell.className = `${this.playerMode ? 'board__cell' : 'board--enemy__cell'}`;
         row.insertAdjacentElement('beforeend', cell);
         boardSquares.push({
           squareIndex: cellIndex,
@@ -155,9 +158,50 @@ class Board {
   }
 
   static _showHideStartGameBtn(classOperation) {
-    const startGameBtn = document.querySelector('.board-btn--start')
+    const startGameBtn = document.querySelector('.board-btn--start');
     if (classOperation === 'add') startGameBtn.classList.add('board-btn--start--hidden');
     if (classOperation === 'remove') startGameBtn.classList.remove('board-btn--start--hidden');
+  }
+
+  _startGame() {
+    const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
+    tl.to('.board-btn', {
+      opacity: 0,
+      duration: 0.5,
+    })
+      .to('.board-wrapper', { opacity: 0 })
+      .to('.board-wrapper', {
+        position: 'static',
+        transform: 'translate(0, 0)',
+        duration: 0,
+      })
+      .to('.board-wrapper', {
+        background: 'rgb(0 0 0 / 0%)',
+        boxShadow: 'none',
+        width: 'min-content',
+        position: 'static',
+        left: 'auto',
+        top: 'auto',
+        transform: 'translate(0, 0)',
+        duration: 0,
+      })
+      .to('.board', {
+        opacity: 0,
+        duration: 0,
+        margin: 0
+      })
+      .to('.board-wrapper', { opacity: 1, duration: 0 })
+      .to('.board', {
+        opacity: 1,
+      })
+      .to(
+        '.board-wrapper--enemy',
+        {
+          visibility: 'visible',
+          opacity: 1,
+        },
+        '-=0.5'
+      );
   }
 }
 export default Board;

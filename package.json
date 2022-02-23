@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "gsap": "^3.9.1",
     "interactjs": "^1.10.11",
     "live-server": "^1.2.1"
   },

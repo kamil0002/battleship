@@ -21,31 +21,51 @@
   </div>
   <!-- <audio muted autoplay id="bg-music" src="./assets/audio/bgMusic.mp3" type="audio/mp3"></audio> -->
   <div id="bg"></div>
-  <div class="board-wrapper">
-    <div class="board">
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
-      <div class="board__row"></div>
+  <div class="game-container">
+
+
+    <div class="board-wrapper">
+      <div class="board">
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+        <div class="board__row"></div>
+      </div>
+
+      <div class="ships">
+        <div data-name="Carrier" data-size="5" class="ship ship--carrier"></div>
+        <div data-name="Battleship" data-size="4" class="ship ship--battleship"></div>
+        <div data-name="Cruiser" data-size="3" class="ship ship--cruiser"></div>
+        <div data-name="Submarine" data-size="3" class="ship ship--submarine"></div>
+        <div data-name="Destroyer" data-size="2" class="ship ship--destroyer"></div>
+      </div>
+      <div class="board-btns">
+        <button class="board-btn board-btn--start">Start Game!</button>
+        <!-- <button class="board-btn board-btn--start board-btn--start--hidden">Start Game!</button> -->
+        <button class="board-btn board-btn--rotate">Rotate ships</button>
+        <button class="board-btn board-btn--undo-move">Undo last move</button>
+      </div>
     </div>
 
-    <div class="ships">
-      <div data-name="Carrier" data-size="5" class="ship ship--carrier"></div>
-      <div data-name="Battleship" data-size="4" class="ship ship--battleship"></div>
-      <div data-name="Cruiser" data-size="3" class="ship ship--cruiser"></div>
-      <div data-name="Submarine" data-size="3" class="ship ship--submarine"></div>
-      <div data-name="Destroyer" data-size="2" class="ship ship--destroyer"></div>
-    </div>
-    <div class="board-btns">
-      <button class="board-btn board-btn--start board-btn--start--hidden">Start Game!</button>
-      <button class="board-btn board-btn--rotate">Rotate ships</button>
-      <button class="board-btn board-btn--undo-move">Undo last move</button>
+    <div class="board-wrapper--enemy">
+      <div class="board--enemy">
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+        <div class="board__row board--enemy__row"></div>
+      </div>
     </div>
   </div>
   <div class="app-actions">

@@ -18,7 +18,7 @@ const gameOptions = {
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
 
-const runGameMode = function() {
+const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
       const playerNameVal = playerName.value;
@@ -33,12 +33,15 @@ const runGameMode = function() {
 runGameMode();
 
 if (mode) {
-
   const boardContainer = document.querySelector('.board');
+  const computerBoardContainer = document.querySelector('.board--enemy');
 
   gameOptions.mode = mode;
 
-  const GameBoard = new Board(gameOptions, boardContainer);
-  const boardSquares = GameBoard.createBoard();
-  GameBoard.configureDraggableShips(boardSquares);
+  const PlayerBoard = new Board(gameOptions, boardContainer);
+  const boardSquares = PlayerBoard.createBoard();
+  PlayerBoard.configureDraggableShips(boardSquares);
+
+  const ComputerBoard = new Board(gameOptions, computerBoardContainer, false);
+  ComputerBoard.createBoard();
 }

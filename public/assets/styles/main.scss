@@ -206,20 +206,17 @@ body {
   }
 }
 
-.board-wrapper {
-  background-color: rgb(112 144 192 / 85%);
-  width: 800px;
-  height: 515px;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+.game-container {
   display: flex;
+  justify-content: space-around;
   align-items: center;
-  box-shadow: 1px 3px 12px 2px rgb(255 255 255 / 30%);
+  padding-top: 15rem;
 }
+///////////////////////////////////////////////////////////////
+//* Board
 
-.board {
+.board,
+.board--enemy {
   box-sizing: content-box;
   background: $board-color-primary;
   margin-left: 4rem;
@@ -231,25 +228,47 @@ body {
   &__row {
     display: grid;
     grid-template-columns: repeat(10, $board-cell-size);
-
-    //TODO Border fix
-    // border-bottom: $board-cell-border-width solid $board-color-secondary;
-    // &:last-child {
-    //   border-bottom: $board-cell-border-width solid transparent;
-    // }
   }
   &__cell {
     border-left: $board-cell-border-width solid $board-color-secondary;
     border-bottom: $board-cell-border-width solid $board-color-secondary;
     cursor: pointer;
 
-    //TODO IN GAME
-    // &:hover {
-    //   background-color: lighten($board-color-primary, 5%);
-    // }
-
     &:first-child {
       border-left: $board-cell-border-width solid transparent;
+    }
+  }
+}
+
+.board-wrapper {
+  background-color: rgb(112 144 192 / 85%);
+  width: 800px;
+  height: 515px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  box-shadow: 1px 3px 12px 2px rgb(255 255 255 / 30%);
+
+  &--enemy {
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+.board {
+  &__cell {
+    &:hover {
+      cursor: default;
+    }
+  }
+  &--enemy {
+    &__cell {
+      &:hover {
+        background-color: lighten($board-color-primary, 5%);
+      }
     }
   }
 }
@@ -457,16 +476,10 @@ body {
     border-radius: 5px;
     font-size: 1.6rem;
     color: $color-light;
-    transition: all 250ms ease-out;
-    animation: pulse 500ms ease-out infinite alternate;
-
-    &:hover {
-      animation-play-state: paused;
-      box-shadow: 2px 3px 7px 3px rgb(0 0 0 / 5%);
-    }
+    animation: pulse 500ms ease infinite alternate;
 
     &--hidden {
-      transform: translateX(-50%) scale(0.9);
+      transform: translateX(-50%);
       opacity: 0;
       visibility: hidden;
     }
@@ -485,10 +498,10 @@ body {
 
 @keyframes pulse {
   from {
-    transform: scale(0.98) translateX(-50%);
+    transform: translateX(-50%) scale(0.98);
   }
 
   to {
-    transform: scale(1.03) translateX(-50%);
+    transform: translateX(-50%) scale(1.03);
   }
 }
