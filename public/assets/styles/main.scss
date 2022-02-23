@@ -8,12 +8,12 @@
 $color-light: #f3f3f3;
 $color-dark: #3c3f43;
 $color-warning: #b13957;
-$board-cell-size: 34px;
+// 4.5vmin: 4.5vmin;
 $board-cell-border-width: 1.3px;
 $board-color-primary: #77a6de;
 $board-color-secondary: #0081f8;
 $ship-color: #8c929c;
-$ship-radius: 18px;
+$ship-radius: 20px;
 
 *,
 *::after,
@@ -206,12 +206,12 @@ body {
   }
 }
 
-.game-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding-top: 15rem;
-}
+// .game-container {
+//   display: flex;
+//   justify-content: space-around;
+//   align-items: center;
+//   padding-top: 15rem;
+// }
 ///////////////////////////////////////////////////////////////
 //* Board
 
@@ -219,15 +219,15 @@ body {
 .board--enemy {
   box-sizing: content-box;
   background: $board-color-primary;
-  margin-left: 4rem;
+  // margin-left: 4rem;
   display: grid;
-  grid-template-rows: repeat(10, $board-cell-size + $board-cell-border-width);
+  grid-template-rows: repeat(10, 4.5vmin);
 
   &__row {
     display: grid;
-    grid-template-columns: repeat(10, $board-cell-size);
+    grid-template-columns: repeat(10, 4.5vmin);
 
-    &:last-child div{
+    &:last-child div {
       border-bottom: none !important;
     }
   }
@@ -243,16 +243,18 @@ body {
 }
 
 .board-wrapper {
-  background-color: rgb(112 144 192 / 85%);
-  width: 800px;
-  height: 515px;
+  // background-color: rgb(112 144 192 / 85%);
+  // padding: 4rem;
+  width: 95%;
+  // height: 80vh;
   position: fixed;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  top: 5%;
+  transform: translate(-50%, 0);
   display: flex;
   align-items: center;
-  box-shadow: 1px 3px 12px 2px rgb(255 255 255 / 30%);
+  flex-direction: column;
+  // box-shadow: 1px 3px 5px 2px rgb(255 255 255 / 10%);
 
   &--enemy {
     visibility: hidden;
@@ -275,16 +277,13 @@ body {
   }
 }
 
-
 .ships {
-  width: 45%;
-  height: $board-cell-size * 5 + 100px;
-  margin: auto;
+  margin-top: 5rem;
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: space-around;
   position: relative;
+  // justify-content: center;
+  // height: min-content;
+  // grid-template-columns: repeat(5, 4.5vmin);
 
   &--rotated {
     flex-direction: row;
@@ -293,66 +292,67 @@ body {
 }
 
 .ship {
+  margin: 1rem;
   &--hidden {
     display: none;
   }
   &--carrier {
-    width: $board-cell-size * 5;
-    height: $board-cell-size;
+    width: 4.5vmin * 5;
+    height: 4.5vmin;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: $board-cell-size;
-      height: $board-cell-size * 5;
+      width: 4.5vmin;
+      height: 4.5vmin * 5;
     }
   }
 
   &--battleship {
-    width: $board-cell-size * 4;
-    height: $board-cell-size;
+    width: 4.5vmin * 4;
+    height: 4.5vmin;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: $board-cell-size;
-      height: $board-cell-size * 4;
+      width: 4.5vmin;
+      height: 4.5vmin * 4;
     }
   }
 
   &--cruiser {
-    width: $board-cell-size * 3;
-    height: $board-cell-size;
+    width: 4.5vmin * 3;
+    height: 4.5vmin;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: $board-cell-size;
-      height: $board-cell-size * 3;
+      width: 4.5vmin;
+      height: 4.5vmin * 3;
     }
   }
 
   &--submarine {
-    width: $board-cell-size * 3;
-    height: $board-cell-size;
+    width: 4.5vmin * 3;
+    height: 4.5vmin;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: $board-cell-size;
-      height: $board-cell-size * 3;
+      width: 4.5vmin;
+      height: 4.5vmin * 3;
     }
   }
 
   &--destroyer {
-    width: $board-cell-size * 2;
-    height: $board-cell-size;
+    width: 4.5vmin * 2;
+    height: 4.5vmin;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: $board-cell-size;
-      height: $board-cell-size * 2;
+      width: 4.5vmin;
+      height: 4.5vmin * 2;
     }
   }
 }
@@ -380,15 +380,14 @@ body {
 
 .ship-h-start {
   position: relative;
-  border-radius: $ship-radius  0 0 $ship-radius;
-  
-  
+  border-radius: $ship-radius 0 0 $ship-radius;
+
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    width: $board-cell-size;
-    height: $board-cell-size;
+    width: 4.5vmin;
+    height: 4.5vmin;
     border-left: $board-cell-border-width solid rgba($color-light, 15%);
     border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
   }
@@ -403,8 +402,8 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    width: $board-cell-size;
-    height: $board-cell-size;
+    width: 4.5vmin;
+    height: 4.5vmin;
     border-left: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
@@ -413,13 +412,12 @@ body {
   position: relative;
   border-radius: 0 $ship-radius $ship-radius 0;
 
-  
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    width: $board-cell-size;
-    height: $board-cell-size;
+    width: 4.5vmin;
+    height: 4.5vmin;
     border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
@@ -433,17 +431,19 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    width: $board-cell-size;
-    height: $board-cell-size;
+    width: 4.5vmin;
+    height: 4.5vmin;
     border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
     border-left: $board-cell-border-width solid rgba($color-light, 15%);
   }
 }
 
 .board-btns {
-  position: absolute;
-  bottom: 5%;
-  right: 4%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
 }
 
 .board-btn {
@@ -472,18 +472,17 @@ body {
   }
 
   &--start {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 200%;
+    margin-top: 4rem;
     background: lighten($board-color-secondary, 10%);
+    position: relative;
+    left: 25%;
+    transform: translateX(-50%);
     border-radius: 5px;
     font-size: 1.6rem;
     color: $color-light;
     animation: pulse 500ms ease infinite alternate;
 
     &--hidden {
-      transform: translateX(-50%);
       opacity: 0;
       visibility: hidden;
     }

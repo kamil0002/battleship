@@ -10,7 +10,7 @@ export const showAlert = (msg, time = 5) => {
 
 export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, boardSquares) => {
   let position;
-  const flexibleCondition = (i) => {
+  const flexibleCondition = (i, flexTolerance) => {
     if (shipsPosition === 'horizontal' && i + shipObj.size - 1 < boardSquares.length) {
       return (
         shipPos.right + 20 > boardSquares[i + shipObj.size - 1].right &&
@@ -19,19 +19,20 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
     }
     if (shipsPosition === 'vertical' && i + (shipObj.size - 1) * 10 < boardSquares.length)
       return (
-        shipPos.bottom + 20 >= boardSquares[i + (shipObj.size - 1) * 10].bottom &&
-        shipPos.bottom - 20 <= boardSquares[i + (shipObj.size - 1) * 10].bottom
+        shipPos.bottom + flexTolerance >= boardSquares[i + (shipObj.size - 1) * 10].bottom &&
+        shipPos.bottom - flexTolerance <= boardSquares[i + (shipObj.size - 1) * 10].bottom
       );
     return false;
   };
 
   boardSquares.forEach((square, index) => {
+    const squareTolerance = square.node.getBoundingClientRect().width * 4/7
     if (
-      shipPos.top + 20 >= square.top &&
-      shipPos.top - 20 <= square.top &&
-      shipPos.left + 20 >= square.left &&
-      shipPos.left - 20 <= square.left &&
-      flexibleCondition(index)
+      shipPos.top + squareTolerance >= square.top &&
+      shipPos.top - squareTolerance <= square.top &&
+      shipPos.left + squareTolerance >= square.left &&
+      shipPos.left - squareTolerance <= square.left &&
+      flexibleCondition(index, squareTolerance - 3)
     ) {
       position = index;
     }

@@ -11,8 +11,8 @@ const MusicController = new AudioController();
 MusicController.control();
 
 const gameOptions = {
-  boardSize: 340,
-  cellSize: 34,
+  boardSize: +document.querySelector('.board').getBoundingClientRect().width,
+  cellSize: +document.querySelector('.board').getBoundingClientRect().width / 10,
 };
 
 const runGameBtn = document.querySelector('.form__button');
