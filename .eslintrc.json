@@ -9,7 +9,9 @@
   "rules": {
     "strict": 0,
     "no-underscore-dangle": "off",
+    "no-param-reassign": "off",
     "no-undef": "off",
+    "no-useless-return": "off",
     "no-restricted-imports": "off",
     "no-restricted-modules": "off",
     "no-plusplus": "off",

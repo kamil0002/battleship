@@ -282,6 +282,9 @@ body {
 }
 
 .ship {
+  &--hidden {
+    display: none;
+  }
   &--carrier {
     width: $board-cell-size * 5;
     height: $board-cell-size;

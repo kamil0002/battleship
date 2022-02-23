@@ -3,11 +3,16 @@ import Ship from './Ship';
 import { showAlert, findShipPositionOnOnBoard } from './utils';
 
 class Board {
-  constructor(gameOptions, boardContainer) {
+  static shipsMoved = [];
+
+  constructor(gameOptions, boardContainer, playerMode = true) {
     this.gameOptions = gameOptions;
     this.boardContainer = boardContainer;
 
-    this._rotateShipsHandler();
+    if (playerMode) {
+      document.querySelector('.board-btn--rotate').addEventListener('click', this._rotateShipsHandler.bind(this));
+      document.querySelector('.board-btn--undo-move').addEventListener('click', this._undoMoveHandler.bind(this));
+    }
   }
 
   createBoard() {
@@ -47,15 +52,7 @@ class Board {
       placedShipPos.bottom = e.target.getBoundingClientRect().bottom;
     };
 
-    const checkPositionAvailability = (boardCells, ship) => {
-      if (boardCells.some((cell) => cell.node.classList.contains('taken'))) {
-        const localShip = ship;
-        localShip.style.transform = `translate(0,0)`;
-        showAlert('Position not allowed!', 3);
-        return true;
-      }
-      return false;
-    };
+    const checkPositionAvailability = (boardCells) => boardCells.some((cell) => cell.node.classList.contains('taken'));
 
     let shipStartNum = 0;
     this.shipsHtml.forEach((ship) => {
@@ -74,66 +71,60 @@ class Board {
 
       interact(this.boardContainer).dropzone({
         ondrop(e) {
+          let squares = [];
           if (!ship.classList.contains(`ship--${ship.dataset.name.toLowerCase()}--rotated`)) {
-            shipStartNum = findShipPositionOnOnBoard(
-              'horizontal',
-              placedShipPos,
-              localShipObj,
-              boardSquares
-            );
+            shipStartNum = findShipPositionOnOnBoard('horizontal', placedShipPos, localShipObj, boardSquares);
           } else if (ship.classList.contains(`ship--${ship.dataset.name.toLowerCase()}--rotated`)) {
-            shipStartNum = findShipPositionOnOnBoard(
-              'vertical',
-              placedShipPos,
-              localShipObj,
-              boardSquares
-            );
+            shipStartNum = findShipPositionOnOnBoard('vertical', placedShipPos, localShipObj, boardSquares);
           }
 
           if (e.relatedTarget.dataset.name === localShipObj.name) {
-            if (
-              checkPositionAvailability(
-                boardSquares.slice(shipStartNum, shipStartNum + localShipObj.size),
-                ship
-              )
-            ) {
-              position = { x: 0, y: 0 };
-              return;
-            }
             if (!ship.classList.contains(`ship--${ship.dataset.name.toLowerCase()}--rotated`)) {
+              if (checkPositionAvailability(boardSquares.slice(shipStartNum, shipStartNum + localShipObj.size))) {
+                ship.style.transform = `translate(0,0)`;
+                showAlert('Position not allowed!', 3);
+                position = { x: 0, y: 0 };
+                return;
+              }
               for (let i = shipStartNum; i < shipStartNum + localShipObj.size; i++) {
                 if (i === shipStartNum) boardSquares[i].node.classList.add('ship-h-start');
+
                 if (i === shipStartNum + localShipObj.size - 1) {
                   boardSquares[i].node.classList.add('ship-h-end');
                 }
+
                 boardSquares[i].node.classList.add('taken', 'taken--horizontal');
+                boardSquares[i].node.dataset.shipName = localShipObj.name;
               }
             }
 
             if (ship.classList.contains(`ship--${ship.dataset.name.toLowerCase()}--rotated`)) {
-              const squares = [boardSquares[shipStartNum]];
+              squares = [boardSquares[shipStartNum]];
               for (let i = 1; i < +ship.dataset.size; i++) {
                 squares.push(boardSquares[shipStartNum + i * 10]);
               }
-              if (checkPositionAvailability(squares, ship)) {
+
+              if (checkPositionAvailability(squares)) {
+                ship.style.transform = 'translate(0,0)';
+                showAlert('Position not allowed!', 3);
                 position = { x: 0, y: 0 };
                 return;
               }
+
               squares.forEach((square) => {
                 square.node.classList.add('taken', 'taken--vertical');
+                square.dataset.shipName = localShipObj.name;
               });
 
               squares[0].node.classList.add('ship-v-start');
               squares[squares.length - 1].node.classList.add('ship-v-end');
+              squares = [];
             }
 
-            // ship.remove();
-
-            // eslint-disable-next-line no-param-reassign
-            ship.style.display = 'none';
-            // eslint-disable-next-line no-param-reassign
-            // ship.style.transform = `translate(0,0)`;
-            // position = { x: 0, y: 0 };
+            ship.classList.add('ship--hidden');
+            ship.style.transform = 'translate(0,0)';
+            position = { x: 0, y: 0 };
+            Board.shipsMoved.unshift(ship);
           }
         },
       });
@@ -141,14 +132,23 @@ class Board {
     return ships;
   }
 
+  _undoMoveHandler() {
+    if (Board.shipsMoved.length === 0) return;
+    const lastMove = Board.shipsMoved[Board.shipsMoved.length - 1];
+    const shipName = lastMove.dataset.name;
+    const boardShipCells = document.querySelectorAll(`[data-ship-name="${shipName}"]`);
+    boardShipCells.forEach((cell) => {
+      cell.className = '';
+      cell.classList.add('board__cell');
+    });
+    document.querySelector(`[data-name="${shipName}"]`).classList.remove('ship--hidden');
+    Board.shipsMoved.splice(Board.shipsMoved.length - 1, 1);
+  }
+
   _rotateShipsHandler() {
     const shipsContainer = document.querySelector('.ships');
-    document.querySelector('.board-btn--rotate').addEventListener('click', () => {
-      this.shipsHtml.forEach((ship) =>
-        ship.classList.toggle(`ship--${ship.dataset.name.toLowerCase()}--rotated`)
-      );
-      shipsContainer.classList.toggle('ships--rotated');
-    });
+    this.shipsHtml.forEach((ship) => ship.classList.toggle(`ship--${ship.dataset.name.toLowerCase()}--rotated`));
+    shipsContainer.classList.toggle('ships--rotated');
   }
 }
 export default Board;

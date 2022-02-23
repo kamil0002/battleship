@@ -14,8 +14,7 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
     if (shipsPosition === 'horizontal' && i + shipObj.size - 1 < boardSquares.length) {
       return (
         shipPos.right + 20 > boardSquares[i + shipObj.size - 1].right &&
-        shipPos.right - 20 < boardSquares[i + shipObj.size - 1].right &&
-        i + shipObj.size - 1 < 100
+        shipPos.right - 20 < boardSquares[i + shipObj.size - 1].right
       );
     }
     if (shipsPosition === 'vertical' && i + (shipObj.size - 1) * 10 < boardSquares.length)
@@ -37,6 +36,5 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
       position = index;
     }
   });
-  console.log(position);
   return position === undefined ? 97 : position;
 };
