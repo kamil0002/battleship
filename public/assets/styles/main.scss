@@ -34,8 +34,7 @@ body {
 }
 
 #bg {
-  background: linear-gradient(0deg, rgba(35, 35, 35, 0.4), rgba(35, 35, 35, 0.4)),
-    url('./../images/bg.jpg');
+  background: linear-gradient(0deg, rgba(35, 35, 35, 0.4), rgba(35, 35, 35, 0.4)), url('./../images/bg.jpg');
   background-size: cover;
   width: 100vw;
   min-height: 100vh;
@@ -207,16 +206,6 @@ body {
   }
 }
 
-@keyframes blink {
-  from {
-    background-color: lighten(#9b9b9b, 0%);
-  }
-
-  to {
-    background-color: lighten(#9b9b9b, 11%);
-  }
-}
-
 .board-wrapper {
   background-color: rgb(112 144 192 / 85%);
   width: 800px;
@@ -365,13 +354,11 @@ body {
   &--vertical {
     border-left: $board-cell-border-width solid $board-color-secondary;
   }
-
 }
 
 .ship-h-start {
   border-radius: $ship-radius 0 0 $ship-radius;
   position: relative;
-
 
   &::after {
     content: '';
@@ -449,13 +436,59 @@ body {
   cursor: pointer;
   transition: transform 150ms ease-out;
 
-  &:hover {
-    transform: translateY(-3%);
-  }
-
   &--rotate {
     margin-right: 3rem;
+    &:hover {
+      transform: translateY(-3%);
+    }
   }
   &--undo-move {
+    &:hover {
+      transform: translateY(-3%);
+    }
+  }
+
+  &--start {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 200%;
+    background: lighten($board-color-secondary, 10%);
+    border-radius: 5px;
+    font-size: 1.6rem;
+    color: $color-light;
+    transition: all 250ms ease-out;
+    animation: pulse 500ms ease-out infinite alternate;
+
+    &:hover {
+      animation-play-state: paused;
+      box-shadow: 2px 3px 7px 3px rgb(0 0 0 / 5%);
+    }
+
+    &--hidden {
+      transform: translateX(-50%) scale(0.9);
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+}
+
+@keyframes blink {
+  from {
+    background-color: lighten(#9b9b9b, 0%);
+  }
+
+  to {
+    background-color: lighten(#9b9b9b, 11%);
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(0.98) translateX(-50%);
+  }
+
+  to {
+    transform: scale(1.03) translateX(-50%);
   }
 }

@@ -8,6 +8,7 @@ class Board {
   constructor(gameOptions, boardContainer, playerMode = true) {
     this.gameOptions = gameOptions;
     this.boardContainer = boardContainer;
+    this.startGameBtn = document.querySelector('.board-btn--start');
 
     if (playerMode) {
       document.querySelector('.board-btn--rotate').addEventListener('click', this._rotateShipsHandler.bind(this));
@@ -110,10 +111,9 @@ class Board {
                 position = { x: 0, y: 0 };
                 return;
               }
-
               squares.forEach((square) => {
                 square.node.classList.add('taken', 'taken--vertical');
-                square.dataset.shipName = localShipObj.name;
+                square.node.dataset.shipName = localShipObj.name;
               });
 
               squares[0].node.classList.add('ship-v-start');
@@ -125,6 +125,7 @@ class Board {
             ship.style.transform = 'translate(0,0)';
             position = { x: 0, y: 0 };
             Board.shipsMoved.unshift(ship);
+            if (Board.shipsMoved.length === 5) Board._showHideStartGameBtn('remove');
           }
         },
       });
@@ -143,12 +144,20 @@ class Board {
     });
     document.querySelector(`[data-name="${shipName}"]`).classList.remove('ship--hidden');
     Board.shipsMoved.splice(Board.shipsMoved.length - 1, 1);
+
+    if (Board.shipsMoved.length < 5) Board._showHideStartGameBtn('add');
   }
 
   _rotateShipsHandler() {
     const shipsContainer = document.querySelector('.ships');
     this.shipsHtml.forEach((ship) => ship.classList.toggle(`ship--${ship.dataset.name.toLowerCase()}--rotated`));
     shipsContainer.classList.toggle('ships--rotated');
+  }
+
+  static _showHideStartGameBtn(classOperation) {
+    const startGameBtn = document.querySelector('.board-btn--start')
+    if (classOperation === 'add') startGameBtn.classList.add('board-btn--start--hidden');
+    if (classOperation === 'remove') startGameBtn.classList.remove('board-btn--start--hidden');
   }
 }
 export default Board;
