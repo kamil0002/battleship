@@ -60,6 +60,10 @@ if (mode) {
     if (yourTurn) {
       const clickedCell = e.target;
       if (!clickedCell.classList.contains('board--enemy__cell')) return;
+      // const isShipAttacked = comp
+      if (!clickedCell.classList.contains('ship--attacked') || !clickedCell.classList.contains('ship--missed')) {
+        clickedCell.classList.add('ship--missed');
+      }
       yourTurn = false;
       showWhoseTurn(yourTurn, turnIndicator);
     }

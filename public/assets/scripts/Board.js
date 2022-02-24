@@ -105,8 +105,8 @@ class Board {
                   boardSquares[i].node.classList.add('ship-horizontal-end');
                 }
 
-                boardSquares[i].node.classList.add('taken', 'taken--horizontal');
-                boardSquares[i].node.dataset.shipName = localShipObj.name;
+                boardSquares[i].node.classList.add('taken');
+                boardSquares[i].node.dataset.ship = localShipObj.name;
               }
             }
 
@@ -123,8 +123,8 @@ class Board {
                 return;
               }
               squares.forEach((square) => {
-                square.node.classList.add('taken', 'taken--vertical');
-                square.node.dataset.shipName = localShipObj.name;
+                square.node.classList.add('taken');
+                square.node.dataset.ship = localShipObj.name;
               });
 
               squares[0].node.classList.add('ship-vertical-start');
@@ -204,14 +204,13 @@ class Board {
   }
 
   createAndPlaceComputerShips() {
-    const addShipToBoard = (localSquares, shipOrientation, localShip, hashCode) => {
+    const addShipToBoard = (localSquares, shipOrientation, localShip) => {
       for (const square of localSquares) {
         localSquares[0].node.classList.add(`ship-${shipOrientation}-start`);
         localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation}-end`);
         square.node.classList.add('taken');
-        square.node.dataset.shipId = hashCode;
+        square.node.dataset.ship = localShip.name;
       }
-      this.#computerShips.find((ship) => ship.name === localShip.name).hashCode = hashCode;
       return true;
     };
 
@@ -232,8 +231,7 @@ class Board {
             localSquares.every((square) => square.top === localSquares[0].top) &&
             localSquares.every((square) => !square.node.classList.contains('taken'))
           ) {
-            const hashCode = (Math.random() + ship.size * Math.random()).toString(16);
-            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship, hashCode);
+            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship);
           }
         }
 
@@ -242,8 +240,7 @@ class Board {
             localSquares.push(this.boardSquares[shipStartPos + i * 10]);
           }
           if (localSquares.every((square) => !square.node.classList.contains('taken'))) {
-            const hashCode = (Math.random() + ship.size * Math.random()).toString(16);
-            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship, hashCode);
+            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship);
           }
         }
       }
