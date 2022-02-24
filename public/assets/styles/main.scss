@@ -198,6 +198,11 @@ button {
     text-align: center;
     padding: 4rem 0 2rem;
     color: $color-warning;
+
+    @media only screen and (max-width: 700px) {
+      font-size: 1rem;
+      padding: 0;
+    }
   }
 
   &__close {
@@ -253,10 +258,20 @@ button {
 .move-indicator {
   margin-top: 1rem;
   height: 45px;
+
+  @media only screen and (max-width: 800px) {
+    height: 20px;
+    margin-top: 0;
+  }
   img {
     display: block;
     margin: auto;
     animation: indicateMove 250ms ease infinite alternate;
+
+    @media only screen and (max-width: 800px) {
+      transform: scale(0.6);
+      animation: none;
+    }
   }
 }
 
@@ -497,6 +512,10 @@ button {
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
+
+  @media only screen and (max-width: 800px) {
+    margin-top: 0;
+  }
 }
 
 .board-btn {
@@ -511,6 +530,11 @@ button {
   border-radius: 3px;
   cursor: pointer;
   transition: transform 150ms ease-out;
+
+  @media only screen and (max-width: 800px) {
+    padding: 0.7rem 1.4rem;
+    font-size: 1.2rem;
+  }
 
   &--rotate {
     margin-right: 3rem;
@@ -534,6 +558,11 @@ button {
     font-size: 1.6rem;
     color: $color-light;
     animation: pulse 500ms ease infinite alternate;
+
+    @media only screen and (max-width: 800px) {
+      margin-top: 1.7rem;
+      font-size: 1.2rem;
+    }
 
     &--hidden {
       opacity: 0;

@@ -64,7 +64,8 @@ class Board {
       placedShipPos.bottom = e.target.getBoundingClientRect().bottom;
     };
 
-    const checkPositionAvailability = (boardCells) => boardCells.some((cell) => cell.node.classList.contains('taken'));
+    const checkPositionAvailability = (boardCells, ship) =>
+      boardCells.some((cell) => cell.node.classList.contains('taken')) || boardCells.length < ship.size;
 
     let shipStartNum = 0;
     this.shipsHtml.forEach((ship) => {
@@ -92,9 +93,14 @@ class Board {
 
           if (e.relatedTarget.dataset.name === localShipObj.name) {
             if (!ship.classList.contains(`ship--${ship.dataset.name.toLowerCase()}--rotated`)) {
-              if (checkPositionAvailability(boardSquares.slice(shipStartNum, shipStartNum + localShipObj.size))) {
+              if (
+                checkPositionAvailability(
+                  boardSquares.slice(shipStartNum, shipStartNum + localShipObj.size),
+                  localShipObj
+                )
+              ) {
                 ship.style.transform = `translate(0,0)`;
-                showAlert('Position not allowed!', 3);
+                showAlert('Position not allowed!', 1);
                 position = { x: 0, y: 0 };
                 return;
               }
@@ -116,7 +122,7 @@ class Board {
                 squares.push(boardSquares[shipStartNum + i * 10]);
               }
 
-              if (checkPositionAvailability(squares)) {
+              if (checkPositionAvailability(squares, localShipObj)) {
                 ship.style.transform = 'translate(0,0)';
                 showAlert('Position not allowed!', 3);
                 position = { x: 0, y: 0 };
