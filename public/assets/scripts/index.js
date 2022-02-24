@@ -37,10 +37,11 @@ if (mode) {
 
   gameOptions.mode = mode;
 
-  const PlayerBoard = new Board(gameOptions, boardContainer);
-  const boardSquares = PlayerBoard.createBoard();
-  PlayerBoard.configureDraggableShips(boardSquares);
+  const playerBoard = new Board(gameOptions, boardContainer);
+  const boardSquares = playerBoard.createBoard();
+  playerBoard.configureDraggableShips(boardSquares);
 
-  const ComputerBoard = new Board(gameOptions, computerBoardContainer, false);
-  ComputerBoard.createBoard();
+  const computerBoard = new Board(gameOptions, computerBoardContainer, false);
+  computerBoard.createBoard();
+  computerBoard._createAndPlaceComputerShips();
 }

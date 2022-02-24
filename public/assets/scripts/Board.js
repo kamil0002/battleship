@@ -6,22 +6,25 @@ import { showAlert, findShipPositionOnOnBoard } from './utils';
 class Board {
   static shipsMoved = [];
 
+  #computerShips = [];
+
   constructor(gameOptions, boardContainer, playerMode = true) {
     this.gameOptions = gameOptions;
     this.boardContainer = boardContainer;
     this.startGameBtn = document.querySelector('.board-btn--start');
+    this.shipsHtml = Array.from(document.querySelectorAll('.ship'));
     this.playerMode = playerMode;
 
     if (playerMode) {
       document.querySelector('.board-btn--rotate').addEventListener('click', this._rotateShipsHandler.bind(this));
       document.querySelector('.board-btn--undo-move').addEventListener('click', this._undoMoveHandler.bind(this));
-      document.querySelector('.board-btn--start').addEventListener('click', this._startGame);
+      document.querySelector('.board-btn--start').addEventListener('click', this._placeBoards);
     }
   }
 
   createBoard() {
     const boardRows = this.boardContainer.querySelectorAll('.board__row');
-    const boardSquares = [];
+    this.boardSquares = [];
     let cellIndex = 1;
     boardRows.forEach((row, index) => {
       for (let i = 0; i < this.gameOptions.boardSize / this.gameOptions.cellSize; i++) {
@@ -30,7 +33,7 @@ class Board {
         cell.className = `${this.playerMode ? 'board__cell' : 'board--enemy__cell'}`;
         if (index === 9) cell.classList.add('last-row');
         row.insertAdjacentElement('beforeend', cell);
-        boardSquares.push({
+        this.boardSquares.push({
           squareIndex: cellIndex,
           left: cell.getBoundingClientRect().left,
           top: cell.getBoundingClientRect().top,
@@ -41,12 +44,11 @@ class Board {
         cellIndex++;
       }
     });
-    return boardSquares;
+    return this.boardSquares;
   }
 
   configureDraggableShips(boardSquares) {
     const placedShipPos = { top: 0, left: 0, right: 0, bottom: 0 };
-    this.shipsHtml = Array.from(document.querySelectorAll('.ship'));
 
     const ships = this.shipsHtml.map((ship) => new Ship(ship.dataset.name, ship.dataset.size));
 
@@ -164,7 +166,7 @@ class Board {
     if (classOperation === 'remove') startGameBtn.classList.remove('board-btn--start--hidden');
   }
 
-  _startGame() {
+  _placeBoards() {
     const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
     tl.to('.board-btn', {
       opacity: 0,
@@ -185,10 +187,62 @@ class Board {
         visibility: 'visible',
         opacity: 1,
         duration: 0.8,
-      }).to('.board-wrapper', {
-        opacity: 1,
-        duration: 0.8,
-      }, '-=0.8');
+      })
+      .to(
+        '.board-wrapper',
+        {
+          opacity: 1,
+          duration: 0.8,
+        },
+        '-=0.8'
+      );
+  }
+
+  _createAndPlaceComputerShips() {
+    const addShipToBoard = (localSquares, shipOrientation, localShip, hashCode) => {
+      for (const square of localSquares) {
+        localSquares[0].node.classList.add(`ship-${shipOrientation[0]}-start`);
+        localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation[0]}-end`);
+        square.node.classList.add('taken');
+        square.node.dataset.shipId = hashCode;
+      }
+      this.#computerShips.find((ship) => ship.name === localShip.name).hashCode = hashCode;
+      return true;
+    };
+
+    this.#computerShips = this.shipsHtml.map((ship) => new Ship(ship.dataset.name, ship.dataset.size));
+    this.#computerShips.forEach((ship) => {
+      let isShipPlaced = false;
+      while (!isShipPlaced) {
+        const localSquares = [];
+        const shipOrientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        const shipStartPos = Math.trunc(Math.random() * 99);
+        const shipEndPos =
+          shipOrientation === 'horizontal' ? shipStartPos + ship.size : shipStartPos + (ship.size - 1) * 10;
+
+        if (shipOrientation === 'horizontal') {
+          localSquares.push(...this.boardSquares.slice(shipStartPos, shipEndPos));
+
+          if (
+            localSquares.every((square) => square.top === localSquares[0].top) &&
+            localSquares.every((square) => !square.node.classList.contains('taken'))
+          ) {
+            const hashCode = (Math.random() + ship.size * Math.random()).toString(16);
+            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship, hashCode);
+          }
+        }
+
+        if (shipOrientation === 'vertical' && shipEndPos < 100) {
+          for (let i = 0; i < ship.size; i++) {
+            localSquares.push(this.boardSquares[shipStartPos + i * 10]);
+          }
+          if (localSquares.every((square) => !square.node.classList.contains('taken'))) {
+            const hashCode = (Math.random() + ship.size * Math.random()).toString(16);
+            isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship, hashCode);
+          }
+        }
+      }
+    });
   }
 }
 export default Board;

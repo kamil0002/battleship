@@ -366,17 +366,17 @@ body {
   cursor: default;
   position: relative;
 
-  &--horizontal {
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
-    }
-  }
-  &--vertical {
-    border-left: $board-cell-border-width solid rgba($color-light, 15%);
-  }
+  // &--horizontal {
+  //   &::after {
+  //     content: '';
+  //     position: absolute;
+  //     inset: 0;
+  //     border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
+  //   }
+  // }
+  // &--vertical {
+  //   border-left: $board-cell-border-width solid rgba($color-light, 15%);
+  // }
 }
 
 .ship-h-start {
@@ -512,7 +512,7 @@ body {
 
 @keyframes indicateMove {
   from {
-    transform: translateY(-3%)
+    transform: translateY(-3%);
   }
 
   to {
