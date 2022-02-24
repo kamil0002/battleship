@@ -33,6 +33,14 @@ body {
   font-family: 'Poppins';
 }
 
+button {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 #bg {
   background: linear-gradient(0deg, rgba(35, 35, 35, 0.4), rgba(35, 35, 35, 0.4)), url('./../images/bg.jpg');
   background-size: cover;
@@ -231,6 +239,7 @@ body {
     }
   }
   &__cell {
+    position: relative;
     border-left: $board-cell-border-width solid rgba($color-light, 15%) !important;
     border-bottom: $board-cell-border-width solid rgba($color-light, 15%) !important;
     cursor: pointer;
@@ -357,6 +366,121 @@ body {
       height: 4.5vmin * 2;
     }
   }
+
+  &-horizontal-start,
+  &-vertical-start,
+  &-horizontal-end,
+  &-vertical-end {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      width: 4.5vmin;
+      height: 4.5vmin;
+    }
+  }
+
+  &-horizontal {
+    &-start {
+      border-radius: $ship-radius 0 0 $ship-radius;
+
+      &::after {
+        border-left: $board-cell-border-width solid rgba($color-light, 15%);
+        border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
+      }
+    }
+
+    &-end {
+      border-radius: 0 $ship-radius $ship-radius 0;
+
+      &::after {
+        border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
+      }
+    }
+  }
+
+  &-vertical {
+    &-start {
+      border-radius: $ship-radius $ship-radius 0 0;
+      border: none;
+
+      &::after {
+        border-left: $board-cell-border-width solid rgba($color-light, 15%);
+      }
+    }
+
+    &-end {
+      border: none;
+      border-radius: 0 0 $ship-radius $ship-radius;
+
+      &::after {
+        border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
+        border-left: $board-cell-border-width solid rgba($color-light, 15%);
+      }
+    }
+  }
+
+  &--attacked {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 2vmin;
+      height: 2vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $color-warning;
+      border-radius: 50%;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 3vmin;
+      height: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      background-color: $color-warning;
+      opacity: 0.3;
+      border-radius: 50%;
+      animation: overfill 1s ease alternate;
+    }
+  }
+
+  &--missed {
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 2vmin;
+      height: 2vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $color-light;
+      border-radius: 50%;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 3vmin;
+      height: 3vmin;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      background-color: $color-light;
+      opacity: 0.3;
+      border-radius: 50%;
+      animation: overfill 1s ease alternate;
+    }
+  }
 }
 
 //* Ship on board styles
@@ -365,78 +489,6 @@ body {
   background-color: $ship-color;
   cursor: default;
   position: relative;
-
-  // &--horizontal {
-  //   &::after {
-  //     content: '';
-  //     position: absolute;
-  //     inset: 0;
-  //     border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
-  //   }
-  // }
-  // &--vertical {
-  //   border-left: $board-cell-border-width solid rgba($color-light, 15%);
-  // }
-}
-
-.ship-h-start {
-  position: relative;
-  border-radius: $ship-radius 0 0 $ship-radius;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: 4.5vmin;
-    height: 4.5vmin;
-    border-left: $board-cell-border-width solid rgba($color-light, 15%);
-    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
-  }
-}
-
-.ship-v-start {
-  border-radius: $ship-radius $ship-radius 0 0;
-  position: relative;
-  border: none;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: 4.5vmin;
-    height: 4.5vmin;
-    border-left: $board-cell-border-width solid rgba($color-light, 15%);
-  }
-}
-
-.ship-h-end {
-  position: relative;
-  border-radius: 0 $ship-radius $ship-radius 0;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: 4.5vmin;
-    height: 4.5vmin;
-    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
-  }
-}
-
-.ship-v-end {
-  position: relative;
-  border: none;
-  border-radius: 0 0 $ship-radius $ship-radius;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    width: 4.5vmin;
-    height: 4.5vmin;
-    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
-    border-left: $board-cell-border-width solid rgba($color-light, 15%);
-  }
 }
 
 .board-btns {
@@ -517,5 +569,17 @@ body {
 
   to {
     transform: translateY(3%);
+  }
+}
+
+@keyframes overfill {
+  from {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.35;
+  }
+
+  to {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0;
   }
 }

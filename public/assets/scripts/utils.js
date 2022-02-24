@@ -3,9 +3,7 @@ export const showAlert = (msg, time = 5) => {
   modal.querySelector('.modal__description').textContent = msg;
   modal.classList.toggle('modal--hidden');
   window.setTimeout(() => modal.classList.add('modal--hidden'), time * 1000);
-  modal
-    .querySelector('.modal__close')
-    .addEventListener('click', () => modal.classList.add('modal--hidden'));
+  modal.querySelector('.modal__close').addEventListener('click', () => modal.classList.add('modal--hidden'));
 };
 
 export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, boardSquares) => {
@@ -26,7 +24,7 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
   };
 
   boardSquares.forEach((square, index) => {
-    const squareTolerance = square.node.getBoundingClientRect().width * 4/7
+    const squareTolerance = (square.node.getBoundingClientRect().width * 4) / 7;
     if (
       shipPos.top + squareTolerance >= square.top &&
       shipPos.top - squareTolerance <= square.top &&
@@ -39,3 +37,18 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
   });
   return position === undefined ? 97 : position;
 };
+
+export const showWhoseTurn = (playerTurn, image) => {
+  if (playerTurn) {
+    document.querySelector('[data-computer-move]').style.opacity = 0;
+    document.querySelector('[data-computer-move]').src = '';
+    document.querySelector('[data-player-move]').src = image;
+    document.querySelector('[data-player-move]').style.opacity = 1;
+  } else if (!playerTurn) {
+    document.querySelector('[data-player-move]').style.opacity = 0;
+    document.querySelector('[data-player-move]').src = '';
+    document.querySelector('[data-computer-move]').style.opacity = 1;
+    document.querySelector('[data-computer-move]').src = image;
+  }
+};
+

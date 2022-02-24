@@ -2,11 +2,14 @@ import interact from 'interactjs';
 import { gsap } from 'gsap';
 import Ship from './Ship';
 import { showAlert, findShipPositionOnOnBoard } from './utils';
+import turnIndicator from '../images/turnIndicator.svg';
 
 class Board {
   static shipsMoved = [];
 
   #computerShips = [];
+
+  #playerShips = [];
 
   constructor(gameOptions, boardContainer, playerMode = true) {
     this.gameOptions = gameOptions;
@@ -47,10 +50,12 @@ class Board {
     return this.boardSquares;
   }
 
-  configureDraggableShips(boardSquares) {
+  configureDraggableShips() {
+    const { boardSquares } = this;
+
     const placedShipPos = { top: 0, left: 0, right: 0, bottom: 0 };
 
-    const ships = this.shipsHtml.map((ship) => new Ship(ship.dataset.name, ship.dataset.size));
+    this.#playerShips = this.shipsHtml.map((ship) => new Ship(ship.dataset.name, ship.dataset.size));
 
     const setplacedShipPosition = (e) => {
       placedShipPos.top = e.target.getBoundingClientRect().top;
@@ -64,7 +69,7 @@ class Board {
     let shipStartNum = 0;
     this.shipsHtml.forEach((ship) => {
       let position = { x: 0, y: 0 };
-      const localShipObj = ships.find((shipEl) => shipEl.name === ship.dataset.name);
+      const localShipObj = this.#playerShips.find((shipEl) => shipEl.name === ship.dataset.name);
       interact(ship).draggable({
         listeners: {
           move(e) {
@@ -94,10 +99,10 @@ class Board {
                 return;
               }
               for (let i = shipStartNum; i < shipStartNum + localShipObj.size; i++) {
-                if (i === shipStartNum) boardSquares[i].node.classList.add('ship-h-start');
+                if (i === shipStartNum) boardSquares[i].node.classList.add('ship-horizontal-start');
 
                 if (i === shipStartNum + localShipObj.size - 1) {
-                  boardSquares[i].node.classList.add('ship-h-end');
+                  boardSquares[i].node.classList.add('ship-horizontal-end');
                 }
 
                 boardSquares[i].node.classList.add('taken', 'taken--horizontal');
@@ -122,8 +127,8 @@ class Board {
                 square.node.dataset.shipName = localShipObj.name;
               });
 
-              squares[0].node.classList.add('ship-v-start');
-              squares[squares.length - 1].node.classList.add('ship-v-end');
+              squares[0].node.classList.add('ship-vertical-start');
+              squares[squares.length - 1].node.classList.add('ship-vertical-end');
               squares = [];
             }
 
@@ -136,7 +141,6 @@ class Board {
         },
       });
     });
-    return ships;
   }
 
   _undoMoveHandler() {
@@ -195,14 +199,15 @@ class Board {
           duration: 0.8,
         },
         '-=0.8'
-      );
+      )
+      .then(() => import('./utils').then((module) => module.showWhoseTurn(true, turnIndicator)));
   }
 
-  _createAndPlaceComputerShips() {
+  createAndPlaceComputerShips() {
     const addShipToBoard = (localSquares, shipOrientation, localShip, hashCode) => {
       for (const square of localSquares) {
-        localSquares[0].node.classList.add(`ship-${shipOrientation[0]}-start`);
-        localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation[0]}-end`);
+        localSquares[0].node.classList.add(`ship-${shipOrientation}-start`);
+        localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation}-end`);
         square.node.classList.add('taken');
         square.node.dataset.shipId = hashCode;
       }
@@ -243,6 +248,14 @@ class Board {
         }
       }
     });
+  }
+
+  get getComputerShips() {
+    return this.#computerShips;
+  }
+
+  get getPlayerShips() {
+    return this.#playerShips;
   }
 }
 export default Board;
