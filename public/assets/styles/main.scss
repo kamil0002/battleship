@@ -301,7 +301,7 @@ button {
   &--enemy {
     &__cell {
       &:hover {
-        background-color: lighten($board-color-primary, 5%);
+        background-color: lighten($board-color-primary, 5%) !important;
       }
     }
   }
@@ -319,9 +319,16 @@ button {
 
 .ship {
   margin: 1rem;
+
   &--hidden {
     display: none;
   }
+
+  &--computer {
+    cursor: pointer !important;
+    background-color: rgb(0 0 0 / 0) !important;
+  }
+
   &--carrier {
     width: $border-cell-width * 5;
     height: $border-cell-width;

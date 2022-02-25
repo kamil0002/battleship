@@ -212,9 +212,9 @@ class Board {
   createAndPlaceComputerShips() {
     const addShipToBoard = (localSquares, shipOrientation, localShip) => {
       for (const square of localSquares) {
-        localSquares[0].node.classList.add(`ship-${shipOrientation}-start`);
-        localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation}-end`);
-        square.node.classList.add('taken');
+        // localSquares[0].node.classList.add(`ship-${shipOrientation}-start`);
+        // localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation}-end`);
+        square.node.classList.add('taken', 'ship--computer');
         square.node.dataset.ship = localShip.name;
       }
       return true;
