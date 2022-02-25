@@ -8,8 +8,8 @@
 $color-light: #f3f3f3;
 $color-dark: #3c3f43;
 $color-warning: #b13957;
-// 4.5vmin: 4.5vmin;
-$board-cell-border-width: 1.3px;
+$board-cell-border-width: 0.04vmin;
+$border-cell-width: 4.6vmin;
 $board-color-primary: #77a6de;
 $board-color-secondary: #0081f8;
 $ship-color: #8c929c;
@@ -233,20 +233,20 @@ button {
   background: $board-color-primary;
   // margin-left: 4rem;
   display: grid;
-  grid-template-rows: repeat(10, 4.5vmin);
+  grid-template-rows: repeat(10, $border-cell-width);
 
   &__row {
     display: grid;
-    grid-template-columns: repeat(10, 4.5vmin);
+    grid-template-columns: repeat(10, $border-cell-width);
 
     &:last-child div {
-      border-bottom: none !important;
+      border-bottom: none;
     }
   }
   &__cell {
     position: relative;
-    border-left: $board-cell-border-width solid rgba($color-light, 15%) !important;
-    border-bottom: $board-cell-border-width solid rgba($color-light, 15%) !important;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
     cursor: pointer;
 
     &:first-child {
@@ -323,62 +323,62 @@ button {
     display: none;
   }
   &--carrier {
-    width: 4.5vmin * 5;
-    height: 4.5vmin;
+    width: $border-cell-width * 5;
+    height: $border-cell-width;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: 4.5vmin;
-      height: 4.5vmin * 5;
+      width: $border-cell-width;
+      height: $border-cell-width * 5;
     }
   }
 
   &--battleship {
-    width: 4.5vmin * 4;
-    height: 4.5vmin;
+    width: $border-cell-width * 4;
+    height: $border-cell-width;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: 4.5vmin;
-      height: 4.5vmin * 4;
+      width: $border-cell-width;
+      height: $border-cell-width * 4;
     }
   }
 
   &--cruiser {
-    width: 4.5vmin * 3;
-    height: 4.5vmin;
+    width: $border-cell-width * 3;
+    height: $border-cell-width;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: 4.5vmin;
-      height: 4.5vmin * 3;
+      width: $border-cell-width;
+      height: $border-cell-width * 3;
     }
   }
 
   &--submarine {
-    width: 4.5vmin * 3;
-    height: 4.5vmin;
+    width: $border-cell-width * 3;
+    height: $border-cell-width;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: 4.5vmin;
-      height: 4.5vmin * 3;
+      width: $border-cell-width;
+      height: $border-cell-width * 3;
     }
   }
 
   &--destroyer {
-    width: 4.5vmin * 2;
-    height: 4.5vmin;
+    width: $border-cell-width * 2;
+    height: $border-cell-width;
     background-color: $ship-color;
     border-radius: $ship-radius;
 
     &--rotated {
-      width: 4.5vmin;
-      height: 4.5vmin * 2;
+      width: $border-cell-width;
+      height: $border-cell-width * 2;
     }
   }
 
@@ -386,14 +386,13 @@ button {
   &-vertical-start,
   &-horizontal-end,
   &-vertical-end {
-    position: relative;
-
     &::after {
       content: '';
       position: absolute;
-      inset: 0;
-      width: 4.5vmin;
-      height: 4.5vmin;
+      top: -1px;
+      bottom: -1px;
+      left: -1.5px;
+      right: -1px;
     }
   }
 
@@ -406,11 +405,11 @@ button {
         border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
       }
     }
-
     &-end {
       border-radius: 0 $ship-radius $ship-radius 0;
 
       &::after {
+        border-right: $board-cell-border-width solid rgba($color-light, 15%);
         border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
       }
     }
@@ -419,7 +418,6 @@ button {
   &-vertical {
     &-start {
       border-radius: $ship-radius $ship-radius 0 0;
-      border: none;
 
       &::after {
         border-left: $board-cell-border-width solid rgba($color-light, 15%);
@@ -427,7 +425,6 @@ button {
     }
 
     &-end {
-      border: none;
       border-radius: 0 0 $ship-radius $ship-radius;
 
       &::after {
@@ -439,6 +436,8 @@ button {
 
   &--attacked {
     position: relative;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
 
     &::after {
       content: '';
@@ -469,6 +468,8 @@ button {
 
   &--missed {
     position: relative;
+    border-left: $board-cell-border-width solid rgba($color-light, 15%);
+    border-bottom: $board-cell-border-width solid rgba($color-light, 15%);
 
     &::after {
       content: '';
@@ -480,6 +481,7 @@ button {
       transform: translate(-50%, -50%);
       background-color: $color-light;
       border-radius: 50%;
+      border-collapse: collapse;
     }
 
     &::before {
@@ -503,7 +505,7 @@ button {
 .taken {
   background-color: $ship-color;
   cursor: default;
-  position: relative;
+  border-bottom: $board-cell-border-width solid rgba($color-light, 15%) !important;
 }
 
 .board-btns {
