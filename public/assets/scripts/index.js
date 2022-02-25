@@ -2,7 +2,7 @@ import '@babel/polyfill';
 
 import AudioController from './AudioController';
 import Board from './Board';
-import { showAlert, showWhoseTurn, delayClickExecution } from './utils';
+import { showAlert, showWhoseTurn, showInformationBox, checkWinner } from './utils';
 import turnIndicator from '../images/turnIndicator.svg';
 
 //* Game functionality
@@ -35,11 +35,12 @@ if (mode) {
   gameOptions.cellSize = +document.querySelector('.board').getBoundingClientRect().width / 10;
   const playerBoardContainer = document.querySelector('.board');
   const computerBoardContainer = document.querySelector('.board--enemy');
+  const informationBox = document.querySelector('.information-box');
 
   gameOptions.mode = mode;
 
   const playerBoard = new Board(gameOptions, playerBoardContainer);
-  playerBoard.createBoard();
+  const playerBoardSquares = playerBoard.createBoard();
   playerBoard.configureDraggableShips();
 
   const computerBoard = new Board(gameOptions, computerBoardContainer, false);
@@ -49,28 +50,77 @@ if (mode) {
   const playerShips = playerBoard.getPlayerShips;
   const computerShips = computerBoard.getComputerShips;
 
+  const computerAttacks = new Set();
+
   let yourTurn = true;
 
+  const shipAttacked = (ships, shipNode, attacker) => {
+    const attackedShip = ships.find((ship) => ship.name === shipNode.dataset.ship);
+    attackedShip.health--;
+    if (attackedShip.health === 0) {
+      const shipIndex = ships.findIndex((ship) => ship.health === 0);
+      ships.splice(shipIndex, 1);
+      showInformationBox(informationBox, attackedShip.name, attacker, { isWinner: false });
+    }
+  };
+
   const attackPlayerBoard = () => {
+    let attackedCell;
+    do {
+      attackedCell = Math.trunc(Math.random() * 100);
+    } while (computerAttacks.has(attackedCell));
+
+    const attack = playerBoardSquares[attackedCell].node.dataset.ship ? 'attacked' : 'missed';
+    playerBoardSquares[attackedCell].node.classList.add(`ship--${attack}`);
+    computerAttacks.add(attackedCell);
+
+    if (attack === 'attacked') {
+      shipAttacked(playerShips, playerBoardSquares[attackedCell].node, 'COMPUTER');
+    }
+
     yourTurn = true;
-    showWhoseTurn(yourTurn, turnIndicator);
+
+    const winnerObj = checkWinner(playerShips, computerShips);
+
+    winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
+
+    if (winnerObj.isWinner) {
+      showInformationBox(informationBox, null, null, winnerObj);
+      return;
+    }
+
   };
 
   const attackComputerBoard = function (e) {
     if (yourTurn) {
       const clickedCell = e.target;
-      if (!clickedCell.classList.contains('board--enemy__cell')) return;
-      // const isShipAttacked = comp
-      if (!clickedCell.classList.contains('ship--attacked') || !clickedCell.classList.contains('ship--missed')) {
-        clickedCell.classList.add('ship--missed');
-      }
+      if (
+        clickedCell.classList.contains('ship--attacked') ||
+        clickedCell.classList.contains('ship--missed') ||
+        !clickedCell.classList.contains('board--enemy__cell')
+      )
+        return;
+
+      const attack = clickedCell.dataset.ship ? 'attacked' : 'missed';
+
+      clickedCell.classList.add(`ship--${attack}`);
+
+      if (attack === 'attacked') shipAttacked(computerShips, clickedCell, 'PLAYER');
+
       yourTurn = false;
-      showWhoseTurn(yourTurn, turnIndicator);
+
+      const winnerObj = checkWinner(playerShips, computerShips);
+
+      winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
+
+      if (winnerObj.isWinner) {
+        showInformationBox(informationBox, null, null, winnerObj);
+        computerBoardSquares.forEach((square) => square.removeEventListener('click', attackComputerBoard));
+        return;
+      }
     }
     setTimeout(() => attackPlayerBoard(), 1000);
   };
 
-  computerBoardSquares.forEach(({ node: squareNode }) =>
-    squareNode.addEventListener('click', attackComputerBoard, { once: true })
-  );
+  computerBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackComputerBoard));
 }

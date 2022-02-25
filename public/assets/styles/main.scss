@@ -289,6 +289,7 @@ button {
   &--enemy {
     visibility: hidden;
     opacity: 0;
+    z-index: 11;
   }
 }
 
@@ -580,6 +581,20 @@ button {
   }
 }
 
+.information-box {
+  display: none;
+  text-align: center;
+  color: $color-light;
+  font-size: 3.5vmin;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  animation: showInformation 6s cubic-bezier(0.01, 0.8, 0.71, 0.85) forwards;
+
+  @media only screen and (max-width: 600px) {
+    font-size: 2.1rem;
+  }
+}
+
 @keyframes blink {
   from {
     background-color: lighten(#9b9b9b, 0%);
@@ -619,5 +634,17 @@ button {
   to {
     transform: translate(-50%, -50%) scale(1.1);
     opacity: 0;
+  }
+}
+
+@keyframes showInformation {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.7);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
