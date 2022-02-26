@@ -2,7 +2,7 @@ import '@babel/polyfill';
 
 import AudioController from './AudioController';
 import Board from './Board';
-import { showAlert, showWhoseTurn, showInformationBox, checkWinner } from './utils';
+import { showAlert, showWhoseTurn, showInformationBox, checkWinner, markShipAsDestroyedOnBoard } from './utils';
 import turnIndicator from '../images/turnIndicator.svg';
 
 //* Game functionality
@@ -11,7 +11,9 @@ const MusicController = new AudioController();
 
 MusicController.control();
 
-const gameOptions = {};
+const gameOptions = {
+  isGameOver: false,
+};
 
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
@@ -59,6 +61,7 @@ if (mode) {
     attackedShip.health--;
     if (attackedShip.health === 0) {
       const shipIndex = ships.findIndex((ship) => ship.health === 0);
+      if (attacker === 'PLAYER') markShipAsDestroyedOnBoard(attackedShip, computerBoardSquares);
       ships.splice(shipIndex, 1);
       showInformationBox(informationBox, attackedShip.name, attacker, { isWinner: false });
     }
@@ -86,13 +89,13 @@ if (mode) {
 
     if (winnerObj.isWinner) {
       showInformationBox(informationBox, null, null, winnerObj);
+      gameOptions.isGameOver = true;
       return;
     }
-
   };
 
   const attackComputerBoard = function (e) {
-    if (yourTurn) {
+    if (yourTurn && !gameOptions.isGameOver) {
       const clickedCell = e.target;
       if (
         clickedCell.classList.contains('ship--attacked') ||
@@ -119,6 +122,7 @@ if (mode) {
         return;
       }
     }
+
     setTimeout(() => attackPlayerBoard(), 1000);
   };
 

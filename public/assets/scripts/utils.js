@@ -1,3 +1,5 @@
+import gsap from 'gsap';
+
 export const showAlert = (msg, time = 5) => {
   const modal = document.querySelector('.modal');
   modal.querySelector('.modal__description').textContent = msg;
@@ -61,19 +63,15 @@ export const showInformationBox = (informationBox, shipName, attacker, winnerObj
     informationBox.style.display = 'block';
   }
 
-  const timeoutId = setTimeout(
-    () => {
-      informationBox.style.display = 'none';
-    },
-    6000
-  );
+  const timeoutId = setTimeout(() => {
+    informationBox.style.display = 'none';
+  }, 6000);
 
   if (winnerObj.isWinner) {
     setTimeout(() => {
       clearTimeout(timeoutId);
       informationBox.textContent = `${winnerObj.winner} won the game!`;
       informationBox.style.display = 'block';
-      return;
     }, 2150);
   }
 };
@@ -96,4 +94,28 @@ export const checkWinner = (playerShips, computerShips) => {
       winner,
     };
   return { isWinner };
+};
+
+export const markShipAsDestroyedOnBoard = (ship, boardSquares) => {
+  const tl = gsap.timeline({ defaults: { ease: 'ease' } });
+  const shipSquares = boardSquares.filter((square) => square.node.dataset.ship === ship.name);
+  const shipDestoryedLine = document.createElement('span');
+  shipDestoryedLine.className = 'ship--destroyed';
+  shipSquares[0].node.insertAdjacentElement('beforeend', shipDestoryedLine);
+
+  if (shipSquares[0].top === shipSquares[shipSquares.length - 1].top) {
+    shipDestoryedLine.style.height = '0.45min';
+    shipDestoryedLine.style.transform = 'translateY(-50%)';
+    tl.to(shipDestoryedLine, {
+      width: `${shipSquares[shipSquares.length - 1].right - shipSquares[0].right}px`,
+      duration: shipSquares.length * 0.7,
+    });
+  } else {
+    shipDestoryedLine.style.width = '0.45vmin';
+    shipDestoryedLine.style.transform = 'translateX(-50%)';
+    tl.to(shipDestoryedLine, {
+      height: `${shipSquares[shipSquares.length - 1].top - shipSquares[0].top}px`,
+      duration: shipSquares.length * 0.7,
+    });
+  }
 };

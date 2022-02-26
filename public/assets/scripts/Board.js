@@ -153,7 +153,7 @@ class Board {
     if (Board.shipsMoved.length === 0) return;
     const lastMove = Board.shipsMoved[Board.shipsMoved.length - 1];
     const shipName = lastMove.dataset.name;
-    const boardShipCells = document.querySelectorAll(`[data-ship-name="${shipName}"]`);
+    const boardShipCells = document.querySelectorAll(`[data-ship="${shipName}"]`);
     boardShipCells.forEach((cell) => {
       cell.className = '';
       cell.classList.add('board__cell');
@@ -212,8 +212,6 @@ class Board {
   createAndPlaceComputerShips() {
     const addShipToBoard = (localSquares, shipOrientation, localShip) => {
       for (const square of localSquares) {
-        // localSquares[0].node.classList.add(`ship-${shipOrientation}-start`);
-        // localSquares[localSquares.length - 1].node.classList.add(`ship-${shipOrientation}-end`);
         square.node.classList.add('taken', 'ship--computer');
         square.node.dataset.ship = localShip.name;
       }
@@ -235,7 +233,8 @@ class Board {
 
           if (
             localSquares.every((square) => square.top === localSquares[0].top) &&
-            localSquares.every((square) => !square.node.classList.contains('taken'))
+            localSquares.every((square) => !square.node.classList.contains('taken')) &&
+            localSquares.length === ship.size
           ) {
             isShipPlaced = addShipToBoard(localSquares, shipOrientation, ship);
           }

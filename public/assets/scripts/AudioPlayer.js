@@ -2,7 +2,7 @@ class AudioPlayer {
   constructor() {
     this._music = new Audio('bgMusic.82a1e5b8.mp3');
     this._music.loop = true;
-    this._music.volume = 0.435;
+    this._music.volume = 0.1;
     this._isMusicPlaying = false;
   }
 

@@ -321,6 +321,17 @@ button {
 .ship {
   margin: 1rem;
 
+  &--destroyed {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: $color-warning;
+
+    &:hover {
+      background: inherit !important;
+    }
+  }
+
   &--hidden {
     display: none;
   }
