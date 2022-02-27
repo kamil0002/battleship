@@ -45,12 +45,14 @@
       <img src="/public/assets/images/MusicPaused.svg" alt="Music Player Icon">
     </a>
   </div>
-  <script>const formWrapper = document.querySelector('.form__option-btns');
+  <script>
+    const formWrapper = document.querySelector('.form__option-btns');
     const formOptions = formWrapper.querySelectorAll('input');
     let mode;
-    formWrapper.addEventListener('click', () => {
+    formWrapper.addEventListener('click', (e) => {
       if (formOptions[0].checked) mode = 'singleplayer';
       if (formOptions[1].checked) mode = 'multiplayer';
+      console.log(mode);
     });
 
   </script>

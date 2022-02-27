@@ -42,15 +42,16 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
 
 export const showWhoseTurn = (playerTurn, image) => {
   if (playerTurn) {
-    document.querySelector('[data-computer-move]').style.opacity = 0;
-    document.querySelector('[data-computer-move]').src = '';
+    console.log(document.querySelector('[data-enemy-move]'));
+    document.querySelector('[data-enemy-move]').style.opacity = 0;
+    document.querySelector('[data-enemy-move]').src = '';
     document.querySelector('[data-player-move]').src = image;
     document.querySelector('[data-player-move]').style.opacity = 1;
   } else if (!playerTurn) {
     document.querySelector('[data-player-move]').style.opacity = 0;
     document.querySelector('[data-player-move]').src = '';
-    document.querySelector('[data-computer-move]').style.opacity = 1;
-    document.querySelector('[data-computer-move]').src = image;
+    document.querySelector('[data-enemy-move]').style.opacity = 1;
+    document.querySelector('[data-enemy-move]').src = image;
   }
 };
 

@@ -3,8 +3,9 @@
   "version": "1.xx.xx",
   "description": "desc",
   "scripts": {
+    "start:dev": "nodemon server.js",
     "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
-    "start": "parcel --port 3000 public/index.html public/singleplayer.html --dist-dir public/dist"
+    "parcel:dev": "parcel public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist"
   },
   "author": "Name",
   "license": "ISC",
@@ -15,11 +16,13 @@
     "gsap": "^3.9.1",
     "interactjs": "^1.10.11",
     "live-server": "^1.2.1",
-    "nodemon": "^2.0.15"
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
     "@parcel/transformer-sass": "^2.3.2",
+    "buffer": "^6.0.3",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^8.3.0",
@@ -29,6 +32,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
     "parcel": "^2.3.2",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "sass": "^1.49.9"
   }
 }

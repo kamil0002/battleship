@@ -1,4 +1,6 @@
-import '@babel/polyfill';
+import { io } from 'socket.io-client';
+
+// import '@babel/polyfill';
 
 import AudioController from './AudioController';
 import Board from './Board';
@@ -36,69 +38,80 @@ const runGameMode = function () {
 
 runGameMode();
 
-if (mode) {
+gameOptions.mode = mode || undefined;
+
+if (gameOptions.mode) {
   gameOptions.boardSize = +document.querySelector('.board').getBoundingClientRect().width;
   gameOptions.cellSize = +document.querySelector('.board').getBoundingClientRect().width / 10;
   const playerBoardContainer = document.querySelector('.board');
   const computerBoardContainer = document.querySelector('.board--enemy');
   const informationBox = document.querySelector('.information-box');
 
-  gameOptions.mode = mode;
+  //* Global settings
 
   const playerBoard = new Board(gameOptions, playerBoardContainer);
   const playerBoardSquares = playerBoard.createBoard();
   playerBoard.configureDraggableShips();
 
-  const computerBoard = new Board(gameOptions, computerBoardContainer, false);
-  const computerBoardSquares = computerBoard.createBoard();
-  computerBoard.createAndPlaceComputerShips();
+  let enemyBoardSquares;
+  let attackPlayerBoard;
+  let computerShips;
 
   const playerShips = playerBoard.getPlayerShips;
-  const computerShips = computerBoard.getComputerShips;
-
-  const computerAttacks = new Set();
 
   let yourTurn = true;
+
+  //* Ship attacked fn
 
   const shipAttacked = (ships, shipNode, attacker) => {
     const attackedShip = ships.find((ship) => ship.name === shipNode.dataset.ship);
     attackedShip.health--;
     if (attackedShip.isSinked()) {
       const shipIndex = ships.findIndex((ship) => ship.isSinked());
-      if (attacker === 'PLAYER') markShipAsDestroyedOnBoard(attackedShip, computerBoardSquares);
+      if (attacker === 'PLAYER') markShipAsDestroyedOnBoard(attackedShip, enemyBoardSquares);
       ships.splice(shipIndex, 1);
       showInformationBox(informationBox, attackedShip.name, attacker, { isWinner: false });
     }
   };
 
-  const attackPlayerBoard = () => {
-    let attackedCell;
-    do {
-      attackedCell = Math.trunc(Math.random() * 100);
-    } while (computerAttacks.has(attackedCell));
+  if (gameOptions.mode === 'singleplayer') {
+    const computerBoard = new Board(gameOptions, computerBoardContainer, false);
+    enemyBoardSquares = computerBoard.createBoard();
+    computerBoard.createAndPlaceComputerShips();
+    computerShips = computerBoard.getComputerShips;
 
-    const attack = playerBoardSquares[attackedCell].node.dataset.ship ? 'attacked' : 'missed';
-    playerBoardSquares[attackedCell].node.classList.add(`ship--${attack}`);
-    computerAttacks.add(attackedCell);
+    const computerAttacks = new Set();
 
-    if (attack === 'attacked') {
-      shipAttacked(playerShips, playerBoardSquares[attackedCell].node, 'COMPUTER');
-    }
+    attackPlayerBoard = () => {
+      if (gameOptions.isGameOver) return;
+      let attackedCell;
+      do {
+        attackedCell = Math.trunc(Math.random() * 100);
+      } while (computerAttacks.has(attackedCell));
 
-    yourTurn = true;
+      const attack = playerBoardSquares[attackedCell].node.dataset.ship ? 'attacked' : 'missed';
+      playerBoardSquares[attackedCell].node.classList.add(`ship--${attack}`);
+      computerAttacks.add(attackedCell);
 
-    const winnerObj = checkWinner(playerShips, computerShips);
+      if (attack === 'attacked') {
+        shipAttacked(playerShips, playerBoardSquares[attackedCell].node, 'COMPUTER');
+      }
 
-    winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
+      yourTurn = true;
 
-    if (winnerObj.isWinner) {
-      showInformationBox(informationBox, null, null, winnerObj);
-      gameOptions.isGameOver = true;
-      return;
-    }
-  };
+      const winnerObj = checkWinner(playerShips, computerShips);
 
-  const attackComputerBoard = function (e) {
+      winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
+
+      if (winnerObj.isWinner) {
+        showInformationBox(informationBox, null, null, winnerObj);
+        gameOptions.isGameOver = true;
+        return;
+      }
+    };
+  }
+
+  const attackEnemyBoard = function (e) {
     if (yourTurn && !gameOptions.isGameOver) {
       const clickedCell = e.target;
       if (
@@ -125,11 +138,19 @@ if (mode) {
         gameOptions.isGameOver = true;
         return;
       }
-
     }
 
     setTimeout(() => attackPlayerBoard(), 800);
   };
 
-  computerBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackComputerBoard));
+  //* Multiplayer
+
+  if (gameOptions.mode === 'multiplayer') {
+    const socket = io();
+    io.on('connection', (socket) => {
+      console.log('User connected'); // x8WIv7-mJelg7on_ALbx
+    });
+  }
+
+  enemyBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackEnemyBoard));
 }
