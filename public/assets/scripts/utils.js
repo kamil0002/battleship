@@ -104,7 +104,7 @@ export const markShipAsDestroyedOnBoard = (ship, boardSquares) => {
   shipSquares[0].node.insertAdjacentElement('beforeend', shipDestoryedLine);
 
   if (shipSquares[0].top === shipSquares[shipSquares.length - 1].top) {
-    shipDestoryedLine.style.height = '0.45min';
+    shipDestoryedLine.style.height = '0.45vmin';
     shipDestoryedLine.style.transform = 'translateY(-50%)';
     tl.to(shipDestoryedLine, {
       width: `${shipSquares[shipSquares.length - 1].right - shipSquares[0].right}px`,

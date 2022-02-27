@@ -10,9 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
     "gsap": "^3.9.1",
     "interactjs": "^1.10.11",
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.1",
+    "nodemon": "^2.0.15"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",

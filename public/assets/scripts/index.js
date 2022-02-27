@@ -22,8 +22,12 @@ const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
       const playerNameVal = playerName.value;
-      if (playerNameVal.trim() === '' || !mode) {
+      if (playerNameVal.trim() === '' && mode === 'multiplayer') {
         showAlert('Player must have a name and mode must be selected 😀');
+        return;
+      }
+      if (!mode) {
+        showAlert('You must select a mode!😀');
         return;
       }
       location.assign(`${location.protocol}//${location.host}/${mode}.html`);
@@ -59,8 +63,8 @@ if (mode) {
   const shipAttacked = (ships, shipNode, attacker) => {
     const attackedShip = ships.find((ship) => ship.name === shipNode.dataset.ship);
     attackedShip.health--;
-    if (attackedShip.health === 0) {
-      const shipIndex = ships.findIndex((ship) => ship.health === 0);
+    if (attackedShip.isSinked()) {
+      const shipIndex = ships.findIndex((ship) => ship.isSinked());
       if (attacker === 'PLAYER') markShipAsDestroyedOnBoard(attackedShip, computerBoardSquares);
       ships.splice(shipIndex, 1);
       showInformationBox(informationBox, attackedShip.name, attacker, { isWinner: false });
@@ -118,12 +122,13 @@ if (mode) {
 
       if (winnerObj.isWinner) {
         showInformationBox(informationBox, null, null, winnerObj);
-        computerBoardSquares.forEach((square) => square.removeEventListener('click', attackComputerBoard));
+        gameOptions.isGameOver = true;
         return;
       }
+
     }
 
-    setTimeout(() => attackPlayerBoard(), 1000);
+    setTimeout(() => attackPlayerBoard(), 800);
   };
 
   computerBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackComputerBoard));
