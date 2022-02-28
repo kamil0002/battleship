@@ -13,10 +13,35 @@ server.listen(port, () => {
 
 app.use(express.static(path.join(__dirname, 'public', 'dist')));
 
+const connections = [false, false];
+
+
 io.on('connection', (socket) => {
-  console.log('user connected', socket.id);
+  let playerIndex = -1;
+
+  for (const connectionNumber in connections) {
+    if (!connections[connectionNumber]) {
+      playerIndex = connectionNumber;
+      break;
+    }
+    console.log('Second', connections);
+  }
+
+  //* Mark player as connected
+
+  connections[playerIndex] = true;
+
+  console.log(`Player ${playerIndex} ${socket.id} connected`);
+
+  if (playerIndex === -1) {
+    console.log('Server is full!');
+    return;
+  }
+
+  socket.emit('player connected', playerIndex);
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    connections[playerIndex] = false;
+    console.log(`Player ${playerIndex} disconnected`);
   });
 });

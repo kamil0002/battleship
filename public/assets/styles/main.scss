@@ -221,7 +221,25 @@ button {
 .game-container {
   display: flex;
   justify-content: space-around;
-  padding-top: 7rem;
+}
+
+.enemy-status {
+  z-index: 1111;
+  color: $color-light;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.4rem;
+  padding-top: 1rem;
+
+  &__connected,
+  &__ready {
+    display: flex;
+    align-items: center;
+    margin: auto;
+    justify-content: space-between;
+    width: 170px;
+  }
 }
 ///////////////////////////////////////////////////////////////
 //* Board
@@ -278,7 +296,7 @@ button {
   width: 95%;
   position: fixed;
   left: 50%;
-  top: 5%;
+  top: 11%;
   transform: translate(-50%, 0);
   display: flex;
   justify-content: center;
@@ -308,8 +326,13 @@ button {
 }
 
 .ships {
+  margin-top: -6rem;
   display: flex;
   position: relative;
+
+  @media only screen and (max-width: 800px) {
+    margin-top: 0;
+  }
 
   &--rotated {
     flex-direction: row;
@@ -535,12 +558,6 @@ button {
 }
 
 .board-btns {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2rem;
-
   @media only screen and (max-width: 800px) {
     margin-top: 0;
   }
@@ -580,8 +597,7 @@ button {
     margin-top: 4rem;
     background: lighten($board-color-secondary, 10%);
     position: relative;
-    left: 25%;
-    transform: translateX(-50%);
+    left: 50%;
     border-radius: 5px;
     font-size: 1.6rem;
     color: $color-light;

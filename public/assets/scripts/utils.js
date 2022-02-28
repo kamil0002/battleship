@@ -42,7 +42,6 @@ export const findShipPositionOnOnBoard = (shipsPosition, shipPos, shipObj, board
 
 export const showWhoseTurn = (playerTurn, image) => {
   if (playerTurn) {
-    console.log(document.querySelector('[data-enemy-move]'));
     document.querySelector('[data-enemy-move]').style.opacity = 0;
     document.querySelector('[data-enemy-move]').src = '';
     document.querySelector('[data-player-move]').src = image;

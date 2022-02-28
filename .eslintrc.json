@@ -17,6 +17,7 @@
     "no-restricted-imports": "off",
     "no-restricted-modules": "off",
     "no-plusplus": "off",
+    "guard-for-in": "off",
     "no-restricted-globals": "off",
     "class-methods-use-this": "off",
     "lines-around-comment": [

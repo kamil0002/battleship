@@ -44,7 +44,7 @@ if (gameOptions.mode) {
   gameOptions.boardSize = +document.querySelector('.board').getBoundingClientRect().width;
   gameOptions.cellSize = +document.querySelector('.board').getBoundingClientRect().width / 10;
   const playerBoardContainer = document.querySelector('.board');
-  const computerBoardContainer = document.querySelector('.board--enemy');
+  const enemyBoardContainer = document.querySelector('.board--enemy');
   const informationBox = document.querySelector('.information-box');
 
   //* Global settings
@@ -53,9 +53,9 @@ if (gameOptions.mode) {
   const playerBoardSquares = playerBoard.createBoard();
   playerBoard.configureDraggableShips();
 
-  let enemyBoardSquares;
   let attackPlayerBoard;
-  let computerShips;
+  const enemyBoard = new Board(gameOptions, enemyBoardContainer, false);
+  const enemyBoardSquares = enemyBoard.createBoard();
 
   const playerShips = playerBoard.getPlayerShips;
 
@@ -74,11 +74,10 @@ if (gameOptions.mode) {
     }
   };
 
+  console.log(gameOptions.mode);
   if (gameOptions.mode === 'singleplayer') {
-    const computerBoard = new Board(gameOptions, computerBoardContainer, false);
-    enemyBoardSquares = computerBoard.createBoard();
-    computerBoard.createAndPlaceComputerShips();
-    computerShips = computerBoard.getComputerShips;
+    enemyBoard.createAndPlaceComputerShips();
+    computerShips = enemyBoard.getComputerShips;
 
     const computerAttacks = new Set();
 
@@ -147,8 +146,9 @@ if (gameOptions.mode) {
 
   if (gameOptions.mode === 'multiplayer') {
     const socket = io();
-    io.on('connection', (socket) => {
-      console.log('User connected'); // x8WIv7-mJelg7on_ALbx
+
+    socket.on('player connected', (playerIndex) => {
+      console.log(playerIndex);
     });
   }
 

@@ -5,6 +5,8 @@ import { showAlert, findShipPositionOnOnBoard } from './utils';
 import turnIndicator from '../images/turnIndicator.svg';
 
 class Board {
+  gameOptions = {};
+
   static shipsMoved = [];
 
   #computerShips = [];
@@ -51,6 +53,7 @@ class Board {
   }
 
   configureDraggableShips() {
+    const { mode } = this.gameOptions;
     const { boardSquares } = this;
 
     const placedShipPos = { top: 0, left: 0, right: 0, bottom: 0 };
@@ -142,7 +145,7 @@ class Board {
             ship.style.transform = 'translate(0,0)';
             position = { x: 0, y: 0 };
             Board.shipsMoved.unshift(ship);
-            if (Board.shipsMoved.length === 5) Board._showHideStartGameBtn('remove');
+            if (Board.shipsMoved.length === 5) Board._showHideStartGameBtn('remove', mode);
           }
         },
       });
@@ -161,7 +164,7 @@ class Board {
     document.querySelector(`[data-name="${shipName}"]`).classList.remove('ship--hidden');
     Board.shipsMoved.splice(Board.shipsMoved.length - 1, 1);
 
-    if (Board.shipsMoved.length < 5) Board._showHideStartGameBtn('add');
+    if (Board.shipsMoved.length < 5) Board._showHideStartGameBtn('add', this.gameOptions);
   }
 
   _rotateShipsHandler() {
@@ -170,8 +173,15 @@ class Board {
     shipsContainer.classList.toggle('ships--rotated');
   }
 
-  static _showHideStartGameBtn(classOperation) {
+  static _showHideStartGameBtn(classOperation, mode) {
     const startGameBtn = document.querySelector('.board-btn--start');
+    console.log(mode);
+    if (mode === 'singleplayer') {
+      startGameBtn.textContent = 'Start Game!';
+    } else {
+      startGameBtn.textContent = 'Ready!';
+    }
+
     if (classOperation === 'add') startGameBtn.classList.add('board-btn--start--hidden');
     if (classOperation === 'remove') startGameBtn.classList.remove('board-btn--start--hidden');
   }
