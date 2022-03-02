@@ -37,9 +37,15 @@ io.on('connection', (socket) => {
     return;
   }
 
+  //* Tell player which number he is
+
   socket.emit('player number', playerIndex);
 
+  //* Tell enemy which player join
+
   socket.broadcast.emit('player connected', playerIndex);
+
+  //* Mark player status as ready
 
   socket.on('player ready', () => {
     console.log(`Player ${playerIndex} is ready!`);
@@ -47,15 +53,20 @@ io.on('connection', (socket) => {
     connections[playerIndex] = true;
   });
 
+  //* Check players connections
+
   socket.on('check players', () => {
     const playersStatus = [];
     for (const i in connections) {
+      console.log('con', connections[i]);
       connections[i] === undefined
         ? playersStatus.push({ connected: false, ready: false })
-        : playersStatus.push({ connected: true, ready: false });
+        : playersStatus.push({ connected: true, ready: connections[i] });
     }
     socket.emit('check players', playersStatus);
   });
+
+  //* Disconnect
 
   socket.on('disconnect', () => {
     console.log('Disconected...');

@@ -182,12 +182,21 @@ if (gameOptions.mode) {
         if (playerStatusIndex !== playerNumber && playersStatus[playerStatusIndex].connected) {
           controlEnemyConnectionIcon();
         }
+        if (playersStatus[playerStatusIndex].ready) {
+          document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
+        }
       }
     };
 
     const playerReadyFn = () => {
       gameOptions.playerReady = true;
       socket.emit('player ready');
+
+      // console.log(playerReady, enemyReady);
+
+      // socket.on('check players', (playersStatus) => {
+      //   console.log('Players status>> ', playersStatus);
+      // });
     };
 
     socket.on('enemy ready', (enemyIndex) => {
@@ -211,10 +220,6 @@ if (gameOptions.mode) {
       console.log(playerIndex);
       controlEnemyConnectionIcon();
     });
-
-    // socket.on('check players', (playersStatus) => {
-    //   console.log('Damn>>', playersStatus);
-    // });
 
     socket.on('player disconnected', () => {
       console.log('Disconected');
