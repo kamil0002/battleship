@@ -13,14 +13,13 @@ server.listen(port, () => {
 
 app.use(express.static(path.join(__dirname, 'public', 'dist')));
 
-const connections = [false, false];
-
+const connections = [undefined, undefined];
 
 io.on('connection', (socket) => {
   let playerIndex = -1;
 
   for (const connectionNumber in connections) {
-    if (!connections[connectionNumber]) {
+    if (connections[connectionNumber] === undefined) {
       playerIndex = connectionNumber;
       break;
     }
@@ -29,19 +28,39 @@ io.on('connection', (socket) => {
 
   //* Mark player as connected
 
-  connections[playerIndex] = true;
-
+  console.log(playerIndex);
+  connections[playerIndex] = false;
+  console.log(connections);
   console.log(`Player ${playerIndex} ${socket.id} connected`);
 
   if (playerIndex === -1) {
-    console.log('Server is full!');
     return;
   }
 
-  socket.emit('player connected', playerIndex);
+  socket.emit('player number', playerIndex);
+
+  socket.broadcast.emit('player connected', playerIndex);
+
+  socket.on('player ready', () => {
+    console.log(`Player ${playerIndex} is ready!`);
+    socket.broadcast.emit('enemy ready', playerIndex);
+    connections[playerIndex] = true;
+  });
+
+  socket.on('check players', () => {
+    const playersStatus = [];
+    for (const i in connections) {
+      connections[i] === undefined
+        ? playersStatus.push({ connected: false, ready: false })
+        : playersStatus.push({ connected: true, ready: false });
+    }
+    socket.emit('check players', playersStatus);
+  });
 
   socket.on('disconnect', () => {
-    connections[playerIndex] = false;
-    console.log(`Player ${playerIndex} disconnected`);
+    console.log('Disconected...');
+    connections[playerIndex] = undefined;
+    socket.emit('check players');
+    socket.broadcast.emit('player disconnected');
   });
 });

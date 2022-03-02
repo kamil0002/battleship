@@ -119,3 +119,61 @@ export const markShipAsDestroyedOnBoard = (ship, boardSquares) => {
     });
   }
 };
+
+export const placeBoards = (fn) => {
+  const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
+  tl.to('.board-btn', {
+    opacity: 0,
+    duration: 0.4,
+    display: 'none',
+  })
+    .to(
+      '[data-enemy-start]',
+      {
+        opacity: 0,
+        display: 'none',
+      },
+      '-=0.4'
+    )
+    .to(
+      '.board-wrapper',
+      {
+        opacity: 0,
+      },
+      '-=0.4'
+    )
+    .to('.player-status__connected', { width: '100px' })
+    .to('.board-wrapper', {
+      width: 'min-content',
+      position: 'relative',
+      display: 'block',
+      left: 'auto',
+      transform: 'translate(0,0)',
+      duration: 0,
+    })
+    .to('.board-wrapper--enemy', {
+      visibility: 'visible',
+      opacity: 1,
+      duration: 0.8,
+    })
+    .to(
+      '.board-wrapper',
+      {
+        opacity: 1,
+        duration: 0.8,
+      },
+      '-=0.8'
+    )
+    .to(
+      '[data-player-status]',
+      {
+        display: 'block',
+      },
+      '-=0.8'
+    )
+    .then(() => fn);
+};
+
+export const controlEnemyConnectionIcon = () => {
+  document.querySelector('.player-status__connected svg path').setAttribute('fill', '#4ECB71');
+};

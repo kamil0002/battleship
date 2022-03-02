@@ -1,8 +1,6 @@
 import interact from 'interactjs';
-import { gsap } from 'gsap';
 import Ship from './Ship';
 import { showAlert, findShipPositionOnOnBoard } from './utils';
-import turnIndicator from '../images/turnIndicator.svg';
 
 class Board {
   gameOptions = {};
@@ -23,7 +21,6 @@ class Board {
     if (playerMode) {
       document.querySelector('.board-btn--rotate').addEventListener('click', this._rotateShipsHandler.bind(this));
       document.querySelector('.board-btn--undo-move').addEventListener('click', this._undoMoveHandler.bind(this));
-      document.querySelector('.board-btn--start').addEventListener('click', this._placeBoards.bind(this));
     }
   }
 
@@ -175,7 +172,6 @@ class Board {
 
   static _showHideStartGameBtn(classOperation, mode) {
     const startGameBtn = document.querySelector('.board-btn--start');
-    console.log(mode);
     if (mode === 'singleplayer') {
       startGameBtn.textContent = 'Start Game!';
     } else {
@@ -184,61 +180,6 @@ class Board {
 
     if (classOperation === 'add') startGameBtn.classList.add('board-btn--start--hidden');
     if (classOperation === 'remove') startGameBtn.classList.remove('board-btn--start--hidden');
-  }
-
-  _placeBoards() {
-    console.log(this.gameOptions.mode);
-    const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
-    tl.to('.board-btn', {
-      opacity: 0,
-      duration: 0.4,
-      display: 'none',
-    })
-      .to(
-        '[data-enemy-start]',
-        {
-          opacity: 0,
-          display: 'none',
-        },
-        '-=0.4'
-      )
-      .to(
-        '.board-wrapper',
-        {
-          opacity: 0,
-        },
-        '-=0.4'
-      )
-      .to('.player-status__connected', { width: '100px' })
-      .to('.board-wrapper', {
-        width: 'min-content',
-        position: 'relative',
-        display: 'block',
-        left: 'auto',
-        transform: 'translate(0,0)',
-        duration: 0,
-      })
-      .to('.board-wrapper--enemy', {
-        visibility: 'visible',
-        opacity: 1,
-        duration: 0.8,
-      })
-      .to(
-        '.board-wrapper',
-        {
-          opacity: 1,
-          duration: 0.8,
-        },
-        '-=0.8'
-      )
-      .to(
-        '[data-player-status]',
-        {
-          display: 'block',
-        },
-        '-=0.8'
-      )
-      .then(() => import('./utils').then((module) => module.showWhoseTurn(true, turnIndicator)));
   }
 
   createAndPlaceComputerShips() {

@@ -4,7 +4,15 @@ import { io } from 'socket.io-client';
 
 import AudioController from './AudioController';
 import Board from './Board';
-import { showAlert, showWhoseTurn, showInformationBox, checkWinner, markShipAsDestroyedOnBoard } from './utils';
+import {
+  showAlert,
+  showWhoseTurn,
+  showInformationBox,
+  checkWinner,
+  markShipAsDestroyedOnBoard,
+  placeBoards,
+  controlEnemyConnectionIcon,
+} from './utils';
 import turnIndicator from '../images/turnIndicator.svg';
 
 //* Game functionality
@@ -15,7 +23,13 @@ MusicController.control();
 
 const gameOptions = {
   isGameOver: false,
+  playerReady: false,
+  enemyReady: false,
 };
+
+//* Socket initiallization
+
+const socket = io();
 
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
@@ -74,6 +88,16 @@ if (gameOptions.mode) {
     }
   };
 
+  //* Start game functionality
+
+  const startGame = () => {
+    if (gameOptions.mode === 'multiplayer') {
+      console.log('PLAYER MODE ACT');
+    } else {
+      placeBoards(showWhoseTurn(true, turnIndicator));
+    }
+  };
+
   console.log(gameOptions.mode);
   if (gameOptions.mode === 'singleplayer') {
     enemyBoard.createAndPlaceComputerShips();
@@ -108,6 +132,8 @@ if (gameOptions.mode) {
         return;
       }
     };
+
+    document.querySelector('.board-btn--start').addEventListener('click', startGame);
   }
 
   const attackEnemyBoard = function (e) {
@@ -145,11 +171,61 @@ if (gameOptions.mode) {
   //* Multiplayer
 
   if (gameOptions.mode === 'multiplayer') {
-    const socket = io();
+    let playerNumber;
+
+    //* Global
+
+    const checkPlayersConnection = (playersStatus) => {
+      console.log(playersStatus);
+      for (const playerStatusIndex in playersStatus) {
+        console.log(playerStatusIndex !== playerNumber);
+        if (playerStatusIndex !== playerNumber && playersStatus[playerStatusIndex].connected) {
+          controlEnemyConnectionIcon();
+        }
+      }
+    };
+
+    const playerReadyFn = () => {
+      gameOptions.playerReady = true;
+      socket.emit('player ready');
+    };
+
+    socket.on('enemy ready', (enemyIndex) => {
+      gameOptions.enemyReady = true;
+      document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
+    });
+
+    socket.on('player number', (playerIndex) => {
+      if (playerIndex === -1) {
+        console.log('Server is full!');
+      } else {
+        playerNumber = playerIndex;
+      }
+
+      socket.emit('check players');
+
+      socket.on('check players', (playersStatus) => checkPlayersConnection(playersStatus));
+    });
 
     socket.on('player connected', (playerIndex) => {
       console.log(playerIndex);
+      controlEnemyConnectionIcon();
     });
+
+    // socket.on('check players', (playersStatus) => {
+    //   console.log('Damn>>', playersStatus);
+    // });
+
+    socket.on('player disconnected', () => {
+      console.log('Disconected');
+      document.querySelector('.player-status__connected svg path').setAttribute('fill', '#CC1400');
+    });
+
+    document.querySelector('#bg').addEventListener('click', () => {
+      console.log(playerNumber);
+    });
+
+    document.querySelector('.board-btn--start').addEventListener('click', playerReadyFn);
   }
 
   enemyBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackEnemyBoard));
