@@ -150,6 +150,12 @@ if (gameOptions.mode) {
 
       clickedCell.classList.add(`ship--${attack}`);
 
+      socket.emit('fire', clickedCell.dataset.id);
+
+      socket.on('fire replay', (cellId) => {
+        console.log(cellId);
+      });
+
       if (attack === 'attacked') shipAttacked(computerShips, clickedCell, 'PLAYER');
 
       yourTurn = false;
@@ -183,6 +189,7 @@ if (gameOptions.mode) {
           controlEnemyConnectionIcon();
         }
         if (playersStatus[playerStatusIndex].ready) {
+          gameOptions.enemyReady = true;
           document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
         }
       }
@@ -192,11 +199,10 @@ if (gameOptions.mode) {
       gameOptions.playerReady = true;
       socket.emit('player ready');
 
-      // console.log(playerReady, enemyReady);
-
-      // socket.on('check players', (playersStatus) => {
-      //   console.log('Players status>> ', playersStatus);
-      // });
+      console.log(gameOptions);
+      if (gameOptions.enemyReady && gameOptions.playerReady) {
+        placeBoards(showWhoseTurn(true, turnIndicator));
+      }
     };
 
     socket.on('enemy ready', (enemyIndex) => {

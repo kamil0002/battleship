@@ -26,16 +26,16 @@ io.on('connection', (socket) => {
     console.log('Second', connections);
   }
 
+  if (playerIndex === -1) {
+    return;
+  }
+
   //* Mark player as connected
 
   console.log(playerIndex);
   connections[playerIndex] = false;
   console.log(connections);
   console.log(`Player ${playerIndex} ${socket.id} connected`);
-
-  if (playerIndex === -1) {
-    return;
-  }
 
   //* Tell player which number he is
 
@@ -64,6 +64,12 @@ io.on('connection', (socket) => {
         : playersStatus.push({ connected: true, ready: connections[i] });
     }
     socket.emit('check players', playersStatus);
+  });
+
+  //* Player fired
+
+  socket.on('fire', (cellId) => {
+    socket.broadcast.emit('fire replay', cellId);
   });
 
   //* Disconnect
