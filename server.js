@@ -16,8 +16,9 @@ app.use(express.static(path.join(__dirname, 'public', 'dist')));
 const connections = [undefined, undefined];
 
 io.on('connection', (socket) => {
+  
   let playerIndex = -1;
-
+  
   for (const connectionNumber in connections) {
     if (connections[connectionNumber] === undefined) {
       playerIndex = connectionNumber;
@@ -25,6 +26,9 @@ io.on('connection', (socket) => {
     }
   }
 
+  console.log(`Player ${playerIndex} connected`)
+
+  
   if (playerIndex === -1) {
     return;
   }
@@ -39,13 +43,13 @@ io.on('connection', (socket) => {
 
   //* Tell enemy which player join
 
-  socket.broadcast.emit('player connected', playerIndex);
+  socket.broadcast.emit('player connected');
 
   //* Mark player status as ready
 
   socket.on('player ready', () => {
     console.log(`Player ${playerIndex} is ready!`);
-    socket.broadcast.emit('enemy ready', playerIndex);
+    socket.broadcast.emit('enemy ready');
     connections[playerIndex] = true;
 
     if (connections.every((connection) => connection)) {

@@ -96,31 +96,39 @@ export const checkWinner = (playerShips, computerShips) => {
   return { isWinner };
 };
 
-export const markShipAsDestroyedOnBoard = (ship, boardSquares) => {
+export const markShipAsDestroyedOnBoard = (ship, boardSquares, shipSquaresIndexes = undefined) => {
+  console.log(boardSquares);
   const tl = gsap.timeline({ defaults: { ease: 'ease' } });
-  const shipSquares = boardSquares.filter((square) => square.node.dataset.ship === ship.name);
+  const shipSquares = shipSquaresIndexes || boardSquares.filter((square) => square.node.dataset.ship === ship.name);
+
   const shipDestoryedLine = document.createElement('span');
   shipDestoryedLine.className = 'ship--destroyed';
-  shipSquares[0].node.insertAdjacentElement('beforeend', shipDestoryedLine);
+  console.log(shipSquares[0]);
+
+  document
+    .querySelector(`.board--enemy [data-id="${shipSquares[0].squareIndex}"]`)
+    .insertAdjacentElement('beforeend', shipDestoryedLine);
 
   if (shipSquares[0].top === shipSquares[shipSquares.length - 1].top) {
     shipDestoryedLine.style.height = '0.45vmin';
     shipDestoryedLine.style.transform = 'translateY(-50%)';
     tl.to(shipDestoryedLine, {
-      width: `${shipSquares[shipSquares.length - 1].right - shipSquares[0].right}px`,
+      // width: `${shipSquares[shipSquares.length - 1].right - shipSquares[0].right}px`,
+
+      width: `calc(${4.6 * ship.size - 1}vmin - 3vmin)`,
       duration: shipSquares.length * 0.7,
     });
   } else {
     shipDestoryedLine.style.width = '0.45vmin';
-    shipDestoryedLine.style.transform = 'translateX(-50%)';
+    shipDestoryedLine.style.transform = `translateX(-50%)`;
     tl.to(shipDestoryedLine, {
-      height: `${shipSquares[shipSquares.length - 1].top - shipSquares[0].top}px`,
+      height: `calc(${4.6 * ship.size - 1}vmin - 3vmin)`,
       duration: shipSquares.length * 0.7,
     });
   }
 };
 
-export const placeBoards = (fn) => {
+export const placeBoards = (cond, icon) => {
   const tl = gsap.timeline({ defaults: { ease: 'power4.inOut', duration: 1 } });
   tl.to('.board-btn', {
     opacity: 0,
@@ -171,7 +179,7 @@ export const placeBoards = (fn) => {
       },
       '-=0.8'
     )
-    .then(() => fn);
+    .then(() => showWhoseTurn(cond, icon));
 };
 
 export const controlEnemyConnectionIcon = () => {

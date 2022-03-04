@@ -68,13 +68,15 @@ if (gameOptions.mode) {
   playerBoard.configureDraggableShips();
 
   let attackPlayerBoard;
+
+  //* Enemy board
+
   const enemyBoard = new Board(gameOptions, enemyBoardContainer, false);
   const enemyBoardSquares = enemyBoard.createBoard();
 
   const playerShips = playerBoard.getPlayerShips;
 
   let yourTurn = gameOptions.mode === 'singleplayer';
-  let yourTurnMulti = false;
 
   //* Ship attacked fn
 
@@ -91,15 +93,6 @@ if (gameOptions.mode) {
 
   //* Start game functionality
 
-  const startGame = () => {
-    if (gameOptions.mode === 'multiplayer') {
-      console.log('PLAYER MODE ACT');
-    } else {
-      placeBoards(showWhoseTurn(true, turnIndicator));
-    }
-  };
-
-  console.log(gameOptions.mode);
   if (gameOptions.mode === 'singleplayer') {
     enemyBoard.createAndPlaceComputerShips();
     computerShips = enemyBoard.getComputerShips;
@@ -134,7 +127,7 @@ if (gameOptions.mode) {
       }
     };
 
-    document.querySelector('.board-btn--start').addEventListener('click', startGame);
+    document.querySelector('.board-btn--start').addEventListener('click', placeBoards.bind(true, turnIndicator));
   }
 
   const attackEnemyBoardSingle = (clickedCell) => {
@@ -145,11 +138,7 @@ if (gameOptions.mode) {
   };
 
   const attackEnemyBoard = function (e) {
-    const condition =
-      gameOptions.mode === 'singleplayer'
-        ? yourTurn && !gameOptions.isGameOver
-        : !gameOptions.isGameOver && yourTurnMulti;
-    if (condition) {
+    if (yourTurn && !gameOptions.isGameOver) {
       const clickedCell = e.target;
       if (
         clickedCell.classList.contains('ship--attacked') ||
@@ -157,31 +146,31 @@ if (gameOptions.mode) {
         !clickedCell.classList.contains('board--enemy__cell')
       )
         return;
-      socket.emit('fire', +clickedCell.dataset.id);
-      showWhoseTurn(false, turnIndicator);
-      yourTurnMulti = !yourTurnMulti;
-      if (gameOptions.mode === 'multiplayer') return;
+
+      yourTurn = !yourTurn;
+
+      if (gameOptions.mode === 'multiplayer') {
+        socket.emit('fire', +clickedCell.dataset.id);
+        showWhoseTurn(false, turnIndicator);
+        return;
+      }
+
       const attack = attackEnemyBoardSingle(clickedCell);
 
       if (attack === 'attacked') shipAttacked(computerShips, clickedCell, 'PLAYER');
 
-      yourTurn = false;
+      const winnerObj = checkWinner(playerShips, computerShips);
 
-      if (gameOptions.mode === 'singleplayer') {
-        const winnerObj = checkWinner(playerShips, computerShips);
+      winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
 
-        winnerObj.isWinner || showWhoseTurn(yourTurn, turnIndicator);
-
-        if (winnerObj.isWinner) {
-          showInformationBox(informationBox, null, null, winnerObj);
-          gameOptions.isGameOver = true;
-          return;
-        }
+      if (winnerObj.isWinner) {
+        showInformationBox(informationBox, null, null, winnerObj);
+        gameOptions.isGameOver = true;
+        return;
       }
     }
-    if (gameOptions.mode === 'singleplayer') {
-      setTimeout(() => attackPlayerBoard(), 800);
-    }
+
+    setTimeout(() => attackPlayerBoard(), 800);
   };
 
   //* Multiplayer
@@ -189,7 +178,7 @@ if (gameOptions.mode) {
   if (gameOptions.mode === 'multiplayer') {
     let playerNumber;
 
-    //* Global
+    //* Verify players connection
 
     const checkPlayersConnection = (playersStatus) => {
       for (const playerStatusIndex in playersStatus) {
@@ -203,18 +192,30 @@ if (gameOptions.mode) {
       }
     };
 
+    //* Mark player as ready, and start game if everyone is ready
+
+    const playerReadyFn = () => {
+      gameOptions.playerReady = true;
+      socket.emit('player ready');
+
+      if (gameOptions.enemyReady && gameOptions.playerReady) {
+        placeBoards(false, turnIndicator);
+      }
+    };
+
     //* Inform enemy that game has started and place boards!
 
     socket.on('game started', (enemyReady) => {
       if (enemyReady) document.querySelector('.player-status__connected svg path').setAttribute('fill', '#4ECB71');
-      yourTurnMulti = true;
-      placeBoards(showWhoseTurn(true, turnIndicator));
+      yourTurn = true;
+      placeBoards(true, turnIndicator);
     });
 
     socket.on('fire received', (cellId) => {
-      yourTurnMulti = true;
+      yourTurn = true;
       let shipObj;
       let shipIndex;
+      let shipSquares;
       const attackedCell = document.querySelector(`[data-id="${cellId}"]`);
       const attackedShip = attackedCell.dataset.ship ? 'attacked' : 'missed';
       attackedCell.classList.add(`ship--${attackedShip}`);
@@ -225,27 +226,31 @@ if (gameOptions.mode) {
           shipIndex = playerShips.findIndex((ship) => ship.isSinked());
         }
       }
+
       if (shipObj && shipObj.isSinked()) {
+        shipSquares = playerBoardSquares.filter((square) => square.node.dataset.ship === shipObj.name);
         showInformationBox(informationBox, shipObj.name, 'ENEMY', { isWinner: false });
         playerShips.splice(shipIndex, 1);
       }
+
       if (playerShips.length === 0) {
         showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
         gameOptions.isGameOver = true;
       }
 
-      socket.emit('fire replay', { ship: shipObj, cellId, gameOver: gameOptions.isGameOver });
+      socket.emit('fire replay', { ship: shipObj, cellId, gameOver: gameOptions.isGameOver, shipSquares });
 
-      showWhoseTurn(yourTurnMulti, turnIndicator);
+      showWhoseTurn(yourTurn, turnIndicator);
     });
 
     //* Mark if player hit enemy ship
 
-    socket.on('fire replay', ({ ship, cellId, gameOver }) => {
+    socket.on('fire replay', ({ ship, cellId, gameOver, shipSquares }) => {
       const cell = document.querySelector(`.board--enemy [data-id="${cellId}"]`);
       if (ship) cell.classList.add('ship--attacked');
       if (!ship) cell.classList.add('ship--missed');
       if (ship && ship.health === 0) {
+        markShipAsDestroyedOnBoard(ship, enemyBoardSquares, shipSquares);
         showInformationBox(informationBox, ship.name, 'PLAYER', { isWinner: false });
       }
 
@@ -256,20 +261,9 @@ if (gameOptions.mode) {
       }
     });
 
-    //* Mark player as ready, and start game if everyone is ready
-
-    const playerReadyFn = () => {
-      gameOptions.playerReady = true;
-      socket.emit('player ready');
-
-      if (gameOptions.enemyReady && gameOptions.playerReady) {
-        placeBoards(showWhoseTurn(false, turnIndicator));
-      }
-    };
-
     //* Inform that enemy is ready
 
-    socket.on('enemy ready', (enemyIndex) => {
+    socket.on('enemy ready', () => {
       gameOptions.enemyReady = true;
       document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
     });
@@ -290,14 +284,13 @@ if (gameOptions.mode) {
 
     //* Inform enemy that player connected
 
-    socket.on('player connected', (playerIndex) => {
+    socket.on('player connected', () => {
       controlEnemyConnectionIcon();
     });
 
     //* Inform enemy that player has disconnected
 
     socket.on('player disconnected', () => {
-      console.log('Disconected');
       document.querySelector('.player-status__connected svg path').setAttribute('fill', '#CC1400');
       document.querySelector('[data-enemy-game-view] div svg path').setAttribute('fill', '#CC1400');
     });
