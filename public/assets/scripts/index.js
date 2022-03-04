@@ -191,12 +191,6 @@ if (gameOptions.mode) {
     const playerReadyFn = () => {
       gameOptions.playerReady = true;
       socket.emit('player ready');
-
-      // console.log(playerReady, enemyReady);
-
-      // socket.on('check players', (playersStatus) => {
-      //   console.log('Players status>> ', playersStatus);
-      // });
     };
 
     socket.on('enemy ready', (enemyIndex) => {
