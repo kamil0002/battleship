@@ -118,7 +118,7 @@ if (gameOptions.mode) {
       computerAttacks.add(attackedCell);
 
       if (attack === 'attacked') {
-        shipAttacked(playerShips, playerBoardSquares[attackedCell].node, 'COMPUTER');
+        shipAttacked(playerShips, playerBoardSquares[attackedCell].node, 'ENEMY');
       }
 
       yourTurn = true;
@@ -158,10 +158,11 @@ if (gameOptions.mode) {
         : !gameOptions.isGameOver && yourTurnMulti;
     if (condition) {
       const clickedCell = e.target;
-      const attack = attackEnemyBoardSingle(clickedCell);
-      socket.emit('fire', clickedCell.dataset.id);
-      yourTurnMulti = !yourTurnMulti;
+      socket.emit('fire', +clickedCell.dataset.id);
       showWhoseTurn(false, turnIndicator);
+      yourTurnMulti = !yourTurnMulti;
+      if (gameOptions.mode === 'multiplayer') return;
+      const attack = attackEnemyBoardSingle(clickedCell);
 
       if (attack === 'attacked') shipAttacked(computerShips, clickedCell, 'PLAYER');
 
@@ -210,17 +211,50 @@ if (gameOptions.mode) {
       placeBoards(showWhoseTurn(true, turnIndicator));
     });
 
-    socket.on('fire replay', (cellId) => {
-      console.log(cellId);
+    socket.on('fire received', (cellId) => {
       yourTurnMulti = true;
+      let shipObj;
+      let shipIndex;
       const attackedCell = document.querySelector(`[data-id="${cellId}"]`);
-      console.log(attackedCell);
       const attackedShip = attackedCell.dataset.ship ? 'attacked' : 'missed';
       attackedCell.classList.add(`ship--${attackedShip}`);
       if (attackedShip === 'attacked') {
-        shipAttacked(playerShips, attackedCell, 'PLAYER');
+        shipObj = playerShips.find((playerShip) => playerShip.name === attackedCell.dataset.ship);
+        shipObj.health--;
+        if (shipObj.isSinked()) {
+          shipIndex = playerShips.findIndex((ship) => ship.isSinked());
+        }
       }
+      if (shipObj && shipObj.isSinked()) {
+        showInformationBox(informationBox, shipObj.name, 'ENEMY', { isWinner: false });
+        playerShips.splice(shipIndex, 1);
+      }
+      if (playerShips.length === 0) {
+        console.log('SINKED!');
+        showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
+        gameOptions.isGameOver = true;
+      }
+
+      socket.emit('fire replay', { ship: shipObj, cellId, gameOver: gameOptions.isGameOver });
+
       showWhoseTurn(yourTurnMulti, turnIndicator);
+    });
+
+    //* Mark if player hit enemy ship
+
+    socket.on('fire replay', ({ ship, cellId, gameOver }) => {
+      const cell = document.querySelector(`.board--enemy [data-id="${cellId}"]`);
+      if (ship) cell.classList.add('ship--attacked');
+      if (!ship) cell.classList.add('ship--missed');
+      if (ship && ship.health === 0) {
+        showInformationBox(informationBox, ship.name, 'PLAYER', { isWinner: false });
+      }
+
+      if (gameOver) {
+        showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
+        gameOptions.isGameOver = true;
+        return;
+      }
     });
 
     //* Mark player as ready, and start game if everyone is ready

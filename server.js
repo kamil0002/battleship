@@ -23,7 +23,6 @@ io.on('connection', (socket) => {
       playerIndex = connectionNumber;
       break;
     }
-    console.log('Second', connections);
   }
 
   if (playerIndex === -1) {
@@ -32,10 +31,7 @@ io.on('connection', (socket) => {
 
   //* Mark player as connected
 
-  console.log(playerIndex);
   connections[playerIndex] = false;
-  console.log(connections);
-  console.log(`Player ${playerIndex} ${socket.id} connected`);
 
   //* Tell player which number he is
 
@@ -62,28 +58,27 @@ io.on('connection', (socket) => {
   socket.on('check players', () => {
     const playersStatus = [];
     for (const i in connections) {
-      console.log('con', connections[i]);
       connections[i] === undefined
         ? playersStatus.push({ connected: false, ready: false })
         : playersStatus.push({ connected: true, ready: connections[i] });
     }
 
-    console.log('Hello');
-
     socket.emit('check players', playersStatus);
   });
 
+
   //* Player fired
 
-  socket.on('fire', (cellId) => {
-    console.log(cellId);
-    socket.broadcast.emit('fire replay', cellId);
-  });
+  socket.on('fire', (cellId) => socket.broadcast.emit('fire received', cellId));
+
+  //* Inform player if he hit enemy ship
+
+  socket.on('fire replay', (cellId) => socket.broadcast.emit('fire replay', cellId));
 
   //* Disconnect
 
   socket.on('disconnect', () => {
-    console.log('Disconected...');
+    console.log(`Player. ${playerIndex} disconnected...`);
     connections[playerIndex] = undefined;
     socket.emit('check players');
     socket.broadcast.emit('player disconnected');

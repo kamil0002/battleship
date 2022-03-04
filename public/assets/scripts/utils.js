@@ -58,21 +58,21 @@ export const showInformationBox = (informationBox, shipName, attacker, winnerObj
   if (!winnerObj.isWinner) {
     let msg;
     if (attacker === 'PLAYER') msg = `You sunk enemies ${shipName}!`;
-    if (attacker === 'COMPUTER') msg = `Enemy sunk your ${shipName}!`;
+    if (attacker === 'ENEMY') msg = `Enemy sunk your ${shipName}!`;
     informationBox.textContent = msg;
     informationBox.style.display = 'block';
   }
 
   const timeoutId = setTimeout(() => {
     informationBox.style.display = 'none';
-  }, 6000);
+  }, 3500);
 
   if (winnerObj.isWinner) {
     setTimeout(() => {
       clearTimeout(timeoutId);
       informationBox.textContent = `${winnerObj.winner} won the game!`;
       informationBox.style.display = 'block';
-    }, 2150);
+    }, 3550);
   }
 };
 
