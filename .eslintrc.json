@@ -13,6 +13,7 @@
     "no-undef": "off",
     "no-useless-return": "off",
     "no-unused-expressions": "off",
+    "consistent-return": "off",
     "no-restricted-syntax": "off",
     "no-restricted-imports": "off",
     "no-restricted-modules": "off",

@@ -51,6 +51,10 @@ io.on('connection', (socket) => {
     console.log(`Player ${playerIndex} is ready!`);
     socket.broadcast.emit('enemy ready', playerIndex);
     connections[playerIndex] = true;
+
+    if (connections.every((connection) => connection)) {
+      socket.broadcast.emit('game started');
+    }
   });
 
   //* Check players connections
@@ -63,12 +67,16 @@ io.on('connection', (socket) => {
         ? playersStatus.push({ connected: false, ready: false })
         : playersStatus.push({ connected: true, ready: connections[i] });
     }
+
+    console.log('Hello');
+
     socket.emit('check players', playersStatus);
   });
 
   //* Player fired
 
   socket.on('fire', (cellId) => {
+    console.log(cellId);
     socket.broadcast.emit('fire replay', cellId);
   });
 
