@@ -138,13 +138,6 @@ if (gameOptions.mode) {
   }
 
   const attackEnemyBoardSingle = (clickedCell) => {
-    if (
-      clickedCell.classList.contains('ship--attacked') ||
-      clickedCell.classList.contains('ship--missed') ||
-      !clickedCell.classList.contains('board--enemy__cell')
-    )
-      return;
-
     const attack = clickedCell.dataset.ship ? 'attacked' : 'missed';
 
     clickedCell.classList.add(`ship--${attack}`);
@@ -158,6 +151,12 @@ if (gameOptions.mode) {
         : !gameOptions.isGameOver && yourTurnMulti;
     if (condition) {
       const clickedCell = e.target;
+      if (
+        clickedCell.classList.contains('ship--attacked') ||
+        clickedCell.classList.contains('ship--missed') ||
+        !clickedCell.classList.contains('board--enemy__cell')
+      )
+        return;
       socket.emit('fire', +clickedCell.dataset.id);
       showWhoseTurn(false, turnIndicator);
       yourTurnMulti = !yourTurnMulti;
@@ -206,7 +205,8 @@ if (gameOptions.mode) {
 
     //* Inform enemy that game has started and place boards!
 
-    socket.on('game started', () => {
+    socket.on('game started', (enemyReady) => {
+      if (enemyReady) document.querySelector('.player-status__connected svg path').setAttribute('fill', '#4ECB71');
       yourTurnMulti = true;
       placeBoards(showWhoseTurn(true, turnIndicator));
     });
@@ -230,7 +230,6 @@ if (gameOptions.mode) {
         playerShips.splice(shipIndex, 1);
       }
       if (playerShips.length === 0) {
-        console.log('SINKED!');
         showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
         gameOptions.isGameOver = true;
       }
@@ -300,6 +299,7 @@ if (gameOptions.mode) {
     socket.on('player disconnected', () => {
       console.log('Disconected');
       document.querySelector('.player-status__connected svg path').setAttribute('fill', '#CC1400');
+      document.querySelector('[data-enemy-game-view] div svg path').setAttribute('fill', '#CC1400');
     });
 
     document.querySelector('.board-btn--start').addEventListener('click', playerReadyFn);

@@ -97,7 +97,6 @@ export const checkWinner = (playerShips, computerShips) => {
 };
 
 export const markShipAsDestroyedOnBoard = (ship, boardSquares) => {
-  console.log(ship, boardSquares);
   const tl = gsap.timeline({ defaults: { ease: 'ease' } });
   const shipSquares = boardSquares.filter((square) => square.node.dataset.ship === ship.name);
   const shipDestoryedLine = document.createElement('span');

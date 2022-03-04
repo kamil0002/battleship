@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
     connections[playerIndex] = true;
 
     if (connections.every((connection) => connection)) {
-      socket.broadcast.emit('game started');
+      socket.broadcast.emit('game started', connections[playerIndex]);
     }
   });
 
