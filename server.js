@@ -11,11 +11,7 @@ server.listen(port, () => {
   console.log(`Server listening at port: ${port}`);
 });
 
-app.use(express.static(path.join(__dirname, 'public', 'dist')));
-
-app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/index.html`);
-});
+app.use('/', express.static(path.join(__dirname, 'public', 'dist')));
 
 const players = [
   { connected: undefined, name: 'Player 1' },
