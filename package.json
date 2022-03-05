@@ -3,9 +3,11 @@
   "version": "1.xx.xx",
   "description": "desc",
   "scripts": {
+    "start": "node server.js",
     "start:dev": "nodemon server.js",
     "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
-    "parcel:dev": "parcel public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist"
+    "parcel:dev": "parcel public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist",
+    "parcel:build": "parcel build public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist"
   },
   "author": "Name",
   "license": "ISC",

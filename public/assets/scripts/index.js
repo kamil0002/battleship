@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-// import '@babel/polyfill';
+import '@babel/polyfill';
 
 import AudioController from './AudioController';
 import Board from './Board';
@@ -30,6 +30,17 @@ const gameOptions = {
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
 
+//* Socket initiallization
+
+const socket = io();
+
+socket.on('server status', (serverFull) => {
+  if (serverFull) {
+    showAlert('Online server is full! You can play only offline game 😔');
+    formOptions[1].disabled = true;
+  }
+});
+
 const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
@@ -43,7 +54,6 @@ const runGameMode = function () {
         return;
       }
       if (mode === 'multiplayer') {
-        const socket = io();
         socket.emit('name insert', playerNameVal);
       }
       location.assign(`${location.protocol}//${location.host}/${mode}.html`);
@@ -180,8 +190,6 @@ if (gameOptions.mode) {
   //* Multiplayer
 
   if (gameOptions.mode === 'multiplayer') {
-    socket = io();
-
     let playerNumber;
 
     //* Verify players connection
@@ -222,7 +230,7 @@ if (gameOptions.mode) {
     //* Inform enemy that game has started and place boards!
 
     socket.on('game started', (enemyPlayer) => {
-      if (enemyPlayer.connected) controlEnemyConnectionIcon('#4ECB71');
+      if (enemyPlayer.connected) controlEnemyConnectionIcon('#4ECB71', '[data-enemy-game-view]');
       gameOptions.enemyName = enemyPlayer.name;
       document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
       document.querySelector('.player-accepted').textContent = 'Game is starting...';

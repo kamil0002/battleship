@@ -23,9 +23,10 @@ io.on('connection', (socket) => {
 
   //* Player nickname
 
+  socket.emit('server status', !players.some((player) => player.connected === undefined));
+
   socket.on('name insert', (playerInput) => {
     players[playerIndex].name = playerInput;
-    return;
   });
 
   for (const connectionNumber in players) {
