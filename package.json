@@ -8,7 +8,6 @@
     "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
     "parcel:dev": "parcel public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist",
     "parcel:build": "parcel build public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Name",
   "license": "ISC",
