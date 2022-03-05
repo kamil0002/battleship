@@ -13,6 +13,10 @@ server.listen(port, () => {
 
 app.use(express.static(path.join(__dirname, 'public', 'dist')));
 
+app.get('/', (req, res) => {
+  res.sendFile(`${__dirname}/public/dist/index.html`);
+});
+
 const players = [
   { connected: undefined, name: 'Player 1' },
   { connected: undefined, name: 'Player 2' },
