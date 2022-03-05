@@ -10,15 +10,7 @@ const port = process.env.PORT || 3000;
 app.use('/', express.static(path.join(__dirname, 'public', 'dist')));
 
 app.get('/', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/index.html`);
-});
-
-app.get('/multiplayer.html', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/multiplayer.html`);
-});
-
-app.get('/singleplayer.html', (req, res) => {
-  res.sendFile(`${__dirname}/public/dist/singleplayer.html`);
+  res.sendFile(`./public/dist/index.html`);
 });
 
 const players = [
