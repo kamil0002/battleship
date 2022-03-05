@@ -221,6 +221,10 @@ button {
 .game-container {
   display: flex;
   justify-content: space-around;
+
+  &--single {
+    padding-top: 8rem;
+  }
 }
 
 .player-status {

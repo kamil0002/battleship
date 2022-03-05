@@ -27,10 +27,6 @@ const gameOptions = {
   enemyReady: false,
 };
 
-//* Socket initiallization
-
-const socket = io();
-
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
 
@@ -46,7 +42,10 @@ const runGameMode = function () {
         showAlert('You must select a mode!😀');
         return;
       }
-      mode === 'multiplayer' && socket.emit('name insert', playerNameVal);
+      if (mode === 'multiplayer') {
+        const socket = io();
+        socket.emit('name insert', playerNameVal);
+      }
       location.assign(`${location.protocol}//${location.host}/${mode}.html`);
     });
 };
@@ -134,7 +133,7 @@ if (gameOptions.mode) {
       }
     }
 
-    setTimeout(() => attackPlayerBoard(), 800);
+    gameOptions.mode === 'singleplayer' && setTimeout(() => attackPlayerBoard(), 800);
   };
 
   //* Start game functionality
@@ -173,12 +172,16 @@ if (gameOptions.mode) {
       }
     };
 
-    document.querySelector('.board-btn--start').addEventListener('click', placeBoards.bind(true, turnIndicator));
+    document.querySelector('.board-btn--start').addEventListener('click', () => {
+      placeBoards(true, turnIndicator);
+    });
   }
 
   //* Multiplayer
 
   if (gameOptions.mode === 'multiplayer') {
+    socket = io();
+
     let playerNumber;
 
     //* Verify players connection

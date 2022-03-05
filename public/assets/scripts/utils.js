@@ -148,7 +148,7 @@ export const placeBoards = (cond, icon) => {
       },
       '-=0.4'
     )
-    .to('.player-status__connected', { width: '100px' })
+    .to('.player-status__connected', { width: '100px', duration: 0 })
     .to('.board-wrapper', {
       width: 'min-content',
       position: 'relative',
@@ -161,22 +161,22 @@ export const placeBoards = (cond, icon) => {
     .to('.board-wrapper--enemy', {
       visibility: 'visible',
       opacity: 1,
-      duration: 0.8,
+      duration: 0.6,
     })
     .to(
       '.board-wrapper',
       {
         opacity: 1,
-        duration: 0.8,
+        duration: 0.6,
       },
-      '-=0.8'
+      '-=0.6'
     )
     .to(
       '[data-player-status]',
       {
         display: 'block',
       },
-      '-=0.8'
+      '-=0.6'
     )
     .then(() => showWhoseTurn(cond, icon));
 };

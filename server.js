@@ -21,6 +21,13 @@ const players = [
 io.on('connection', (socket) => {
   let playerIndex = -1;
 
+  //* Player nickname
+
+  socket.on('name insert', (playerInput) => {
+    players[playerIndex].name = playerInput;
+    return;
+  });
+
   for (const connectionNumber in players) {
     if (players[connectionNumber].connected === undefined) {
       playerIndex = connectionNumber;
@@ -37,12 +44,6 @@ io.on('connection', (socket) => {
   //* Mark player as connected
 
   players[playerIndex].connected = false;
-
-  //* Player nickname
-
-  socket.on('name insert', (playerInput) => {
-    players[playerIndex].name = playerInput;
-  });
 
   //* Tell player which number he is
 
