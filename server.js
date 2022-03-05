@@ -17,9 +17,11 @@ const players = [
 io.on('connection', (socket) => {
   let playerIndex = -1;
 
-  //* Player nickname
+  //* Check if server is full
 
   socket.emit('server status', !players.some((player) => player.connected === undefined));
+
+  //* Player nickname
 
   socket.on('name insert', (playerInput) => {
     players[playerIndex].name = playerInput;
