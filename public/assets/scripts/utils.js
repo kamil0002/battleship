@@ -76,7 +76,7 @@ export const showInformationBox = (informationBox, shipName, attacker, winnerObj
   }
 };
 
-export const checkWinner = (playerShips, computerShips) => {
+export const checkWinnerOffline = (playerShips, computerShips) => {
   let isWinner = false;
   let winner;
   if (computerShips.length === 0) {
@@ -97,13 +97,11 @@ export const checkWinner = (playerShips, computerShips) => {
 };
 
 export const markShipAsDestroyedOnBoard = (ship, boardSquares, shipSquaresIndexes = undefined) => {
-  console.log(boardSquares);
   const tl = gsap.timeline({ defaults: { ease: 'ease' } });
   const shipSquares = shipSquaresIndexes || boardSquares.filter((square) => square.node.dataset.ship === ship.name);
 
   const shipDestoryedLine = document.createElement('span');
   shipDestoryedLine.className = 'ship--destroyed';
-  console.log(shipSquares[0]);
 
   document
     .querySelector(`.board--enemy [data-id="${shipSquares[0].squareIndex}"]`)
@@ -159,6 +157,7 @@ export const placeBoards = (cond, icon) => {
       transform: 'translate(0,0)',
       duration: 0,
     })
+    .to('.player-accepted', { display: 'none' })
     .to('.board-wrapper--enemy', {
       visibility: 'visible',
       opacity: 1,
@@ -182,6 +181,6 @@ export const placeBoards = (cond, icon) => {
     .then(() => showWhoseTurn(cond, icon));
 };
 
-export const controlEnemyConnectionIcon = () => {
-  document.querySelector('.player-status__connected svg path').setAttribute('fill', '#4ECB71');
+export const controlEnemyConnectionIcon = (color, startSelector = '.player-status__connected') => {
+  document.querySelector(`${startSelector} svg path`).setAttribute('fill', color);
 };
