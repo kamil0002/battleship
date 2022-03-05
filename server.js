@@ -7,15 +7,7 @@ const io = require('socket.io')(server);
 
 const port = process.env.PORT || 3000;
 
-server.listen(port, () => {
-  console.log(`Server listening at port: ${port}`);
-});
-
-
-
-app.use('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'dist'));
-});
+app.use('/', express.static(path.join(__dirname, 'public', 'dist')));
 
 const players = [
   { connected: undefined, name: 'Player 1' },
@@ -100,4 +92,8 @@ io.on('connection', (socket) => {
     socket.emit('check players');
     socket.broadcast.emit('player disconnected');
   });
+});
+
+server.listen(port, () => {
+  console.log(`Server listening at port: ${port}`);
 });
