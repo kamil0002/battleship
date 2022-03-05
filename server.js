@@ -13,29 +13,36 @@ server.listen(port, () => {
 
 app.use(express.static(path.join(__dirname, 'public', 'dist')));
 
-const connections = [undefined, undefined];
+const players = [
+  { connected: undefined, name: 'Player 1' },
+  { connected: undefined, name: 'Player 2' },
+];
 
 io.on('connection', (socket) => {
-  
   let playerIndex = -1;
-  
-  for (const connectionNumber in connections) {
-    if (connections[connectionNumber] === undefined) {
+
+  for (const connectionNumber in players) {
+    if (players[connectionNumber].connected === undefined) {
       playerIndex = connectionNumber;
       break;
     }
   }
 
-  console.log(`Player ${playerIndex} connected`)
+  console.log(`Player ${playerIndex} connected`);
 
-  
   if (playerIndex === -1) {
     return;
   }
 
   //* Mark player as connected
 
-  connections[playerIndex] = false;
+  players[playerIndex].connected = false;
+
+  //* Player nickname
+
+  socket.on('name insert', (playerInput) => {
+    players[playerIndex].name = playerInput;
+  });
 
   //* Tell player which number he is
 
@@ -45,31 +52,31 @@ io.on('connection', (socket) => {
 
   socket.broadcast.emit('player connected');
 
-  //* Mark player status as ready
+  //* Mark player status as ready and send his name
 
   socket.on('player ready', () => {
     console.log(`Player ${playerIndex} is ready!`);
-    socket.broadcast.emit('enemy ready');
-    connections[playerIndex] = true;
+    socket.broadcast.emit('enemy ready', players[playerIndex].name);
+    socket.emit('player name', players[playerIndex].name);
+    players[playerIndex].connected = true;
 
-    if (connections.every((connection) => connection)) {
-      socket.broadcast.emit('game started', connections[playerIndex]);
+    if (players.every((connection) => connection.connected)) {
+      socket.broadcast.emit('game started', players[playerIndex]);
     }
   });
 
-  //* Check players connections
+  //* Check players players
 
   socket.on('check players', () => {
     const playersStatus = [];
-    for (const i in connections) {
-      connections[i] === undefined
+    for (const i in players) {
+      players[i].connected === undefined
         ? playersStatus.push({ connected: false, ready: false })
-        : playersStatus.push({ connected: true, ready: connections[i] });
+        : playersStatus.push({ connected: true, ready: players[i].connected });
     }
 
     socket.emit('check players', playersStatus);
   });
-
 
   //* Player fired
 
@@ -83,7 +90,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`Player. ${playerIndex} disconnected...`);
-    connections[playerIndex] = undefined;
+    players[playerIndex].connected = undefined;
     socket.emit('check players');
     socket.broadcast.emit('player disconnected');
   });

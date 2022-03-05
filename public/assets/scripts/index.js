@@ -46,6 +46,7 @@ const runGameMode = function () {
         showAlert('You must select a mode!😀');
         return;
       }
+      mode === 'multiplayer' && socket.emit('name insert', playerNameVal);
       location.assign(`${location.protocol}//${location.host}/${mode}.html`);
     });
 };
@@ -199,6 +200,7 @@ if (gameOptions.mode) {
     const playerReadyFn = (e) => {
       gameOptions.playerReady = true;
       socket.emit('player ready');
+
       const startBtnNode = e.target;
       const { parentNode } = startBtnNode;
       parentNode.removeChild(document.querySelector('[data-board-action-btns]'));
@@ -216,8 +218,11 @@ if (gameOptions.mode) {
 
     //* Inform enemy that game has started and place boards!
 
-    socket.on('game started', (enemyReady) => {
-      if (enemyReady) controlEnemyConnectionIcon('#4ECB71');
+    socket.on('game started', (enemyPlayer) => {
+      if (enemyPlayer.connected) controlEnemyConnectionIcon('#4ECB71');
+      gameOptions.enemyName = enemyPlayer.name;
+      document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
+      document.querySelector('.player-accepted').textContent = 'Game is starting...';
       yourTurn = true;
       placeBoards(true, turnIndicator);
     });
@@ -245,7 +250,7 @@ if (gameOptions.mode) {
       }
 
       if (playerShips.length === 0) {
-        showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
+        showInformationBox(informationBox, null, null, { winner: gameOptions.enemyName, isWinner: true });
         gameOptions.isGameOver = true;
       }
 
@@ -266,7 +271,7 @@ if (gameOptions.mode) {
       }
 
       if (gameOver) {
-        showInformationBox(informationBox, null, null, { winner: 'Adam', isWinner: true });
+        showInformationBox(informationBox, null, null, { winner: gameOptions.playerName, isWinner: true });
         gameOptions.isGameOver = true;
         return;
       }
@@ -274,7 +279,9 @@ if (gameOptions.mode) {
 
     //* Inform that enemy is ready
 
-    socket.on('enemy ready', () => {
+    socket.on('enemy ready', (enemyName) => {
+      gameOptions.enemyName = enemyName;
+      document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
       gameOptions.enemyReady = true;
       document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
     });
@@ -291,6 +298,13 @@ if (gameOptions.mode) {
       socket.emit('check players');
 
       socket.on('check players', (playersStatus) => checkPlayersConnection(playersStatus));
+    });
+
+    //* Inform player about his name
+
+    socket.on('player name', (playerNick) => {
+      document.querySelector('.board-wrapper .player-status__nick').textContent = playerNick;
+      gameOptions.playerName = playerNick;
     });
 
     //* Inform enemy that player connected
