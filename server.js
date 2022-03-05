@@ -9,6 +9,8 @@ const port = process.env.PORT || 3000;
 
 app.use('/', express.static(path.join(__dirname, 'public', 'dist')));
 
+app.get('/', express.static(path.join(__dirname, 'public', 'dist')));
+
 const players = [
   { connected: undefined, name: 'Player 1' },
   { connected: undefined, name: 'Player 2' },
