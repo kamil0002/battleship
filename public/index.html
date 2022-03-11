@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./assets/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./assets/styles/main.scss">
+  <script src="/public/assets/scripts/index.js" defer type="module"></script>
+  <title>Battleship</title>
+</head>
+
+<body>
+  <div class="modal modal--hidden">
+    <h2 class="modal__description"></h2>
+    <span class="modal__close">✖</span>
+  </div>
+  <audio autoplay="" id="bg-music" src="/public/assets/audio/bgMusic.mp3" type="audio/mp3"></audio>
+  <div id="bg"></div>
+  <h1 class="game-title">Battleship</h1>
+  <div class="form-wrapper">
+    <form action="#" class="form">
+      <h2 class="form__header">
+        Battleship
+      </h2>
+      <div class="form__username">
+        <label>Your name</label>
+        <input>
+      </div>
+      <div class="form__option-btns">
+        <input id="singleplayer" type="radio" name="game-mode">
+        <label for="singleplayer">Play against computer</label>
+
+        <input id="multiplayer" type="radio" name="game-mode">
+        <label for="multiplayer">Play against friend</label>
+      </div>
+
+      <a href="#" type="submit" class="form__button">Start</a>
+    </form>
+  </div>
+
+  <div class="app-actions">
+    <a class="app-actions__music">
+      <img src="/public/assets/images/MusicPaused.svg" alt="Music Player Icon">
+    </a>
+  </div>
+  <script>
+    const formWrapper = document.querySelector('.form__option-btns');
+    const formOptions = formWrapper.querySelectorAll('input');
+    let mode;
+    formWrapper.addEventListener('click', (e) => {
+      if (formOptions[0].checked) mode = 'singleplayer';
+      if (formOptions[1].checked) mode = 'multiplayer';
+      console.log(mode);
+    });
+
+  </script>
+</body>
+
+</html>

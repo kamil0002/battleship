@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-import '@babel/polyfill';
+// import '@babel/polyfill';
 
 import AudioController from './AudioController';
 import Board from './Board';
@@ -78,6 +78,7 @@ if (gameOptions.mode) {
   playerBoard.configureDraggableShips();
 
   let attackPlayerBoard;
+  let computerShips;
 
   //* Enemy board
 
