@@ -293,7 +293,6 @@ if (gameOptions?.mode) {
     //* Inform that enemy is ready
 
     socket.on('enemy ready', (enemyName) => {
-      console.log('READY');
       gameOptions.enemyName = enemyName;
       document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
       gameOptions.enemyReady = true;
