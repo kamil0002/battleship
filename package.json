@@ -1,6 +1,6 @@
 {
-  "name": "app-name",
-  "version": "1.xx.xx",
+  "name": "battleship",
+  "version": "1.00.00",
   "description": "desc",
   "scripts": {
     "start": "node server.js",
@@ -15,15 +15,12 @@
     "@babel/polyfill": "^7.12.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "gsap": "^3.9.1",
-    "interactjs": "^1.10.11",
     "live-server": "^1.2.1",
-    "socket.io": "^4.4.1",
-    "socket.io-client": "^4.4.1"
+    "socket.io": "^4.4.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",
-    "@parcel/transformer-sass": "^2.3.2",
+    "@parcel/transformer-sass": "^2.4.0",
     "buffer": "^6.0.3",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -33,11 +30,19 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.28.0",
-    "parcel": "^2.3.2",
+    "parcel": "^2.4.0",
     "prettier": "^2.5.1",
     "sass": "^1.49.9"
   },
   "engines": {
-    "node": "16.13.2"
+    "node": "^16.13.2"
+  },
+  "browser": {
+    "engines": {
+      "browsers": [
+        "> 1%",
+        "not dead"
+      ]
+    }
   }
 }

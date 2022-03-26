@@ -1,5 +1,3 @@
-import { io } from 'socket.io-client';
-
 // import '@babel/polyfill';
 
 import AudioController from './AudioController';
@@ -26,7 +24,6 @@ const gameOptions = {
   playerReady: false,
   enemyReady: false,
 };
-
 const runGameBtn = document.querySelector('.form__button');
 const playerName = document.querySelector('.form__username input');
 
@@ -44,6 +41,10 @@ socket.on('server status', (serverFull) => {
 const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
+      const formOptions = document.querySelectorAll('input');
+      if (formOptions[1].checked) mode = 'singleplayer';
+      if (formOptions[2].checked) mode = 'multiplayer';
+
       const playerNameVal = playerName.value;
       if (playerNameVal.trim() === '' && mode === 'multiplayer') {
         showAlert('Player must have a name and mode must be selected 😀');
@@ -64,7 +65,7 @@ runGameMode();
 
 gameOptions.mode = mode || undefined;
 
-if (gameOptions.mode) {
+if (gameOptions?.mode) {
   gameOptions.boardSize = +document.querySelector('.board').getBoundingClientRect().width;
   gameOptions.cellSize = +document.querySelector('.board').getBoundingClientRect().width / 10;
   const playerBoardContainer = document.querySelector('.board');
@@ -292,10 +293,11 @@ if (gameOptions.mode) {
     //* Inform that enemy is ready
 
     socket.on('enemy ready', (enemyName) => {
+      console.log('READY');
       gameOptions.enemyName = enemyName;
       document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
       gameOptions.enemyReady = true;
-      document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
+      document.querySelector('.enemy-ready-icon path').setAttribute('fill', '#4ECB71');
     });
 
     //* Check if server is full and assign player number

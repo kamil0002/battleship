@@ -8,13 +8,17 @@
   <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon" />
   <title>Battleship - singleplayer</title>
   <link rel="stylesheet" href="assets/styles/main.scss" />
-  <script>
-    const mode = 'singleplayer';
-  </script>
+  <script src="./assets/scripts/singleplayerMode.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" defer></script>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+    crossorigin="anonymous"></script>
   <script src="./assets/scripts/index.js" defer type="module"></script>
 </head>
 
 <body>
+  <audio src="./assets/audio/bgMusic.mp3" paused></audio>
   <div class="modal modal--hidden">
     <h2 class="modal__description"></h2>
     <span class="modal__close">✖</span>

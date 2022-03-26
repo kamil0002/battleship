@@ -1,4 +1,3 @@
-import interact from 'interactjs';
 import Ship from './Ship';
 import { showAlert, findShipPositionOnOnBoard } from './utils';
 
