@@ -219,8 +219,8 @@ if (gameOptions?.mode) {
       gameOptions.enemyReady || parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
       if (gameOptions.enemyReady && gameOptions.playerReady) {
         playerReadyInformation.textContent = 'Game is starting...';
-        if (playerNumber === '1' && gameOptions.enemyName === undefined) {
-          gameOptions.enemyName = 'Player 1';
+        if (gameOptions.enemyName === undefined) {
+          gameOptions.enemyName = playerNumber === '2' ? 'Player 1' : 'Player 2';
           document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
         }
         parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
