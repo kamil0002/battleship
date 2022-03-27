@@ -95,43 +95,8 @@ button {
     }
   }
 
-  &__username {
-    margin: 3rem auto;
-
-    label {
-      display: block;
-      font-size: 1.3rem;
-      margin-bottom: 0.7rem;
-    }
-
-    input {
-      font-family: 'Poppins';
-      background: #c4c4c4;
-      border-radius: 5px;
-      width: 320px;
-      height: 35px;
-      border: none;
-      font-size: 1.5rem;
-      padding-left: 1rem;
-      color: $color-dark;
-      border-bottom: 5px solid transparent;
-      transition: border-bottom 150ms ease-out;
-
-      @media only screen and (max-width: 600px) {
-        font-size: 1.2rem;
-        width: 250px;
-        height: 40px;
-      }
-
-      &:focus {
-        outline: none;
-        border-bottom: 5px solid #3c3f43;
-      }
-    }
-  }
-
   &__option-btns {
-    margin: 1.2rem 0;
+    margin: 3.5rem 0 1.3rem;
 
     label {
       width: 320px;

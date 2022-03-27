@@ -21,12 +21,6 @@ io.on('connection', (socket) => {
 
   socket.emit('server status', !players.some((player) => player.connected === undefined));
 
-  //* Player nickname
-
-  socket.on('name insert', (playerInput) => {
-    players[playerIndex].name = playerInput;
-  });
-
   for (const connectionNumber in players) {
     if (players[connectionNumber].connected === undefined) {
       playerIndex = connectionNumber;
@@ -61,6 +55,7 @@ io.on('connection', (socket) => {
     players[playerIndex].connected = true;
 
     if (players.every((connection) => connection.connected)) {
+      console.log('called');
       socket.broadcast.emit('game started', players[playerIndex]);
     }
   });

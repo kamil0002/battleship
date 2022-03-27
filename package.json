@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
-    "watch:sass": "sass --watch public/assets/sass/main.scss:public/assets/css/styles.css",
     "parcel:dev": "parcel public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist",
     "parcel:build": "parcel build public/index.html public/singleplayer.html public/multiplayer.html --dist-dir public/dist"
   },

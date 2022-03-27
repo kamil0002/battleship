@@ -140,7 +140,7 @@ class Board {
             ship.classList.add('ship--hidden');
             ship.style.transform = 'translate(0,0)';
             position = { x: 0, y: 0 };
-            Board.shipsMoved.unshift(ship);
+            Board.shipsMoved.push(ship);
             if (Board.shipsMoved.length === 5) Board._showHideStartGameBtn('remove', mode);
           }
         },

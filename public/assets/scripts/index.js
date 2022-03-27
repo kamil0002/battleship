@@ -25,37 +25,17 @@ const gameOptions = {
   enemyReady: false,
 };
 const runGameBtn = document.querySelector('.form__button');
-const playerName = document.querySelector('.form__username input');
-
-//* Socket initiallization
-
-const socket = io();
-
-socket.on('server status', (serverFull) => {
-  if (serverFull) {
-    showAlert('Online server is full! You can play only offline game 😔');
-    formOptions[1].disabled = true;
-  }
-});
 
 const runGameMode = function () {
   if (runGameBtn)
     runGameBtn.addEventListener('click', () => {
       const formOptions = document.querySelectorAll('input');
-      if (formOptions[1].checked) mode = 'singleplayer';
-      if (formOptions[2].checked) mode = 'multiplayer';
+      if (formOptions[0].checked) mode = 'singleplayer';
+      if (formOptions[1].checked) mode = 'multiplayer';
 
-      const playerNameVal = playerName.value;
-      if (playerNameVal.trim() === '' && mode === 'multiplayer') {
-        showAlert('Player must have a name and mode must be selected 😀');
-        return;
-      }
       if (!mode) {
         showAlert('You must select a mode!😀');
         return;
-      }
-      if (mode === 'multiplayer') {
-        socket.emit('name insert', playerNameVal);
       }
       location.assign(`${location.protocol}//${location.host}/${mode}.html`);
     });
@@ -103,16 +83,7 @@ if (gameOptions?.mode) {
     }
   };
 
-  //* Global functions
-
-  const attackEnemyBoardSingle = (clickedCell) => {
-    const attack = clickedCell.dataset.ship ? 'attacked' : 'missed';
-
-    clickedCell.classList.add(`ship--${attack}`);
-    return attack;
-  };
-
-  const attackEnemyBoard = function (e) {
+  const attackEnemyBoardSingle = function (e) {
     if (yourTurn && !gameOptions.isGameOver) {
       const clickedCell = e.target;
       if (
@@ -124,13 +95,9 @@ if (gameOptions?.mode) {
 
       yourTurn = !yourTurn;
 
-      if (gameOptions.mode === 'multiplayer') {
-        socket.emit('fire', +clickedCell.dataset.id);
-        showWhoseTurn(false, turnIndicator);
-        return;
-      }
+      const attack = clickedCell.dataset.ship ? 'attacked' : 'missed';
 
-      const attack = attackEnemyBoardSingle(clickedCell);
+      clickedCell.classList.add(`ship--${attack}`);
 
       if (attack === 'attacked') shipAttacked(computerShips, clickedCell, 'PLAYER');
 
@@ -146,6 +113,23 @@ if (gameOptions?.mode) {
     }
 
     gameOptions.mode === 'singleplayer' && setTimeout(() => attackPlayerBoard(), 800);
+  };
+
+  const attackEnemyBoardMulti = function (e, socket) {
+    if (yourTurn && !gameOptions.isGameOver) {
+      const clickedCell = e.target;
+      if (
+        clickedCell.classList.contains('ship--attacked') ||
+        clickedCell.classList.contains('ship--missed') ||
+        !clickedCell.classList.contains('board--enemy__cell')
+      )
+        return;
+
+      yourTurn = !yourTurn;
+
+      socket.emit('fire', +clickedCell.dataset.id);
+      showWhoseTurn(false, turnIndicator);
+    }
   };
 
   //* Start game functionality
@@ -187,11 +171,22 @@ if (gameOptions?.mode) {
     document.querySelector('.board-btn--start').addEventListener('click', () => {
       placeBoards(true, turnIndicator);
     });
+
+    enemyBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackEnemyBoardSingle));
   }
 
   //* Multiplayer
 
   if (gameOptions.mode === 'multiplayer') {
+    const socket = io();
+
+    socket.on('server status', (serverFull) => {
+      if (serverFull) {
+        showAlert('Online server is full! You can play only offline game 😔');
+        setTimeout(() => location.assign(`${location.protocol}//${location.host}`), 3000);
+      }
+    });
+
     let playerNumber;
 
     //* Verify players connection
@@ -203,7 +198,7 @@ if (gameOptions?.mode) {
         }
         if (playersStatus[playerStatusIndex].ready) {
           gameOptions.enemyReady = true;
-          document.querySelector('[data-enemy-ready] path').setAttribute('fill', '#4ECB71');
+          document.querySelector('.enemy-ready-icon path').setAttribute('fill', '#4ECB71');
         }
       }
     };
@@ -224,6 +219,8 @@ if (gameOptions?.mode) {
       gameOptions.enemyReady || parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
       if (gameOptions.enemyReady && gameOptions.playerReady) {
         playerReadyInformation.textContent = 'Game is starting...';
+        gameOptions.enemyName = playerNumber === 0 ? 'Player 2' : 'Player 1';
+        document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
         parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
         placeBoards(false, turnIndicator);
       }
@@ -334,7 +331,9 @@ if (gameOptions?.mode) {
     });
 
     document.querySelector('.board-btn--start').addEventListener('click', playerReadyFn);
-  }
 
-  enemyBoardSquares.forEach(({ node: squareNode }) => squareNode.addEventListener('click', attackEnemyBoard));
+    enemyBoardSquares.forEach(({ node: squareNode }) =>
+      squareNode.addEventListener('click', (e) => attackEnemyBoardMulti(e, socket))
+    );
+  }
 }
