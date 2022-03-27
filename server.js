@@ -55,7 +55,6 @@ io.on('connection', (socket) => {
     players[playerIndex].connected = true;
 
     if (players.every((connection) => connection.connected)) {
-      console.log('called');
       socket.broadcast.emit('game started', players[playerIndex]);
     }
   });

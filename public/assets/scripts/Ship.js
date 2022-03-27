@@ -10,10 +10,6 @@ class Ship {
     return `You hit enemy ${this.name}!`;
   }
 
-  sinkedMsg() {
-    return `You sank the enemies ${this.name}!`;
-  }
-
   isSinked() {
     return this.health === 0;
   }
