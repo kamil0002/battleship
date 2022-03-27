@@ -1,5 +1,3 @@
-// import '@babel/polyfill';
-
 import AudioController from './AudioController';
 import Board from './Board';
 import {
@@ -219,10 +217,8 @@ if (gameOptions?.mode) {
       gameOptions.enemyReady || parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
       if (gameOptions.enemyReady && gameOptions.playerReady) {
         playerReadyInformation.textContent = 'Game is starting...';
-        if (gameOptions.enemyName === undefined) {
-          gameOptions.enemyName = playerNumber === '2' ? 'Player 1' : 'Player 2';
-          document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
-        }
+        gameOptions.enemyName = +playerNumber === 1 ? 'Player 1' : 'Player 2';
+        document.querySelector('.board-wrapper--enemy .player-status__nick').textContent = gameOptions.enemyName;
         parentNode.insertAdjacentElement('beforeend', playerReadyInformation);
         placeBoards(false, turnIndicator);
       }
