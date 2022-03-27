@@ -109,8 +109,6 @@ export const markShipAsDestroyedOnBoard = (ship, boardSquares, shipSquaresIndexe
     shipDestoryedLine.style.height = '0.45vmin';
     shipDestoryedLine.style.transform = 'translateY(-50%)';
     tl.to(shipDestoryedLine, {
-      // width: `${shipSquares[shipSquares.length - 1].right - shipSquares[0].right}px`,
-
       width: `calc(${4.6 * ship.size - 1}vmin - 3vmin)`,
       duration: shipSquares.length * 0.7,
     });
