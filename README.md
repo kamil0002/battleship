@@ -11,11 +11,21 @@ Aplikacja jest odtworzeniem popularnej ongiś gry ```Battleship``` w wersji onli
 
 #### Wykorzystane technologie
   - Front-End
-      - interact.js – biblioteka umożliwiające konfigurację przeciągania elementów
-      - gsap – biblioteka do animacji
-      - socket.io-client – biblioteka, umożliwiająca komunikację serwera z klientem w czasie rzeczywistym.
-      - parcel – bundler
+      - interact.js
+      - gsap
+      - socket.io-client
+      - parcel
   - Back-End:
-      - express.js – biblioteka node.js do stworzenia serwera
-      - socket.io – biblioteka, umożliwiająca komunikację klient - server
+      - express.js
+      - socket.io
 
+
+### Uruchomienie
+
+W folderze z projektem uruchamiamy kolejno:
+
+#    ```npm install```
+#    ```npm run parcel:build```
+#    ```npm start```
+
+Po uruchomieniu serwera aplikacja jest dostępna pod adresem localhost:3000
