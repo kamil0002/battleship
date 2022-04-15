@@ -24,8 +24,8 @@ Aplikacja jest odtworzeniem popularnej ongiś gry ```Battleship``` w wersji onli
 
 W folderze z projektem uruchamiamy kolejno:
 
-#    ```npm install```
-#    ```npm run parcel:build```
-#    ```npm start```
+#    `npm install`
+#    `npm run parcel:build`
+#    `npm start`
 
 Po uruchomieniu serwera aplikacja jest dostępna pod adresem localhost:3000
