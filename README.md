@@ -34,6 +34,6 @@ Po uruchomieniu serwera aplikacja jest dostępna pod adresem localhost:3000
 
 ## ![alt text](https://github.com/kamil0002/battleship/blob/master/game_screenshots/game_ss-1.png?raw=true)
 
-## ![alt text](https://github.com/kamil0002/battleship/blob/master/game_screenshots/game_ss-1.png?raw=true)
+## ![alt text](https://github.com/kamil0002/battleship/blob/master/game_screenshots/game_ss-2.png?raw=true)
 
-## ![alt text](https://github.com/kamil0002/battleship/blob/master/game_screenshots/game_ss-1.png?raw=true)
+## ![alt text](https://github.com/kamil0002/battleship/blob/master/game_screenshots/game_ss-3.png?raw=true)
